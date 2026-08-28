@@ -425,6 +425,71 @@ body {
     font-weight: 600;
 }
 
+.demo-authors,
+.demo-supervisor {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.9;
+    margin-top: 10px;
+}
+
+.demo-authors-lead,
+.demo-supervisor-lead {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.author-name {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 2px 11px;
+    margin: 3px 5px 3px 0;
+}
+
+.supervisor-name {
+    display: inline-block;
+    background: var(--bg-light);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 2px 9px;
+    margin: 3px 6px 3px 0;
+}
+
+.supervisor-detail {
+    color: var(--text-secondary);
+}
+
+.keywords-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 12px;
+}
+
+.keywords-label {
+    flex: 0 0 auto;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding-top: 4px;
+}
+
+.keywords-row .publication-meta {
+    justify-content: flex-start;
+    border-top: none;
+    padding-top: 0;
+    flex: 1 1 auto;
+}
+
 .hero-stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
