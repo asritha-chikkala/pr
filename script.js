@@ -2769,7 +2769,7 @@ function initShareableState() {
             const done = () => {
                 btn.textContent = '✓ Copied!';
                 btn.classList.add('copied');
-                setTimeout(() => { btn.textContent = '🔗 Copy link'; btn.classList.remove('copied'); }, 1500);
+                setTimeout(() => { btn.textContent = 'Copy link'; btn.classList.remove('copied'); }, 1500);
             };
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
