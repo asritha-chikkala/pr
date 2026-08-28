@@ -105,38 +105,6 @@ is needed for the charts to render.
 
 ---
 
-## Proposed Features / Roadmap
-
-Ideas for extending the demo website (see `CONTRIBUTING.md` to pick one up):
-
-1. **Real inference engine.** The "Predict Cancer Risk" button and the missing-data
-   slider currently return hardcoded values (74.2%, and a fixed `riskMap`). Wire the
-   site to an actual BN (e.g., a JS BN library or CPTs exported from the Colab notebook)
-   so predictions and the missing-data curve are computed live.
-2. **Editable evidence vector.** Let visitors change the 23 biomarker values (and
-   demographics) instead of a single fixed patient case, and watch the risk update.
-3. **What-if comparison.** Side-by-side comparison of two patient evidence vectors.
-4. **Confusion matrix / threshold explorer.** The CSS for a confusion matrix and
-   clinical-utility panel already exists but is unused; make the 5% / 50% thresholds
-   interactive with a draggable cutoff and live sensitivity/specificity/PPV/NPV.
-5. **Decision-curve (net benefit) analysis** interactivity to communicate clinical utility.
-6. **Interactive DAG nodes.** Add hover tooltips to *every* node showing its conditional
-   probability table or in/out-degree, not just the pruned edges.
-7. **Mobile navigation.** The top nav is hidden below 992px; add a hamburger menu.
-8. **Dark mode toggle** and a proper color-contrast pass for accessibility (red-on-white
-   risk text fails contrast checks).
-9. **Shareable state.** Encode the current evidence vector + slider in the URL so a
-   result can be linked or exported as PNG/PDF.
-10. **Accessibility & SEO.** ARIA roles, keyboard navigation for SVG/canvas, meta tags,
-    and a social preview image.
-11. **Reproducibility packaging.** Add the Colab notebook under `notebooks/`, a
-    `requirements.txt`, and a script that regenerates every `images/*.jpeg` from raw data.
-12. **Lazy-loaded / responsive images** (`srcset`, `loading="lazy"`) to cut page weight.
-13. **Smoke tests.** A tiny headless check (e.g., Playwright) that the page loads and the
-    charts initialize without console errors.
-
----
-
 ## Original Paper Citation
 
 Please cite the original study when using this work. BibTeX is in
@@ -154,8 +122,8 @@ publisher's copyrighted article and is distributed here for scholarly reference 
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for how to propose changes, add the missing
-notebook, or pick up a roadmap item.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for how to propose changes or add the missing
+notebook.
 
 ---
 
