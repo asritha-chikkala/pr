@@ -461,18 +461,40 @@ function stepPresenter() {
 }
 
 function initGlobalShortcuts() {
-    const SECTIONS = { '1': 'hero', '2': 'problem-lab', '3': 'dag-comparison', '4': 'imputation-section', '5': 'clinical-results' };
+    const SECTIONS = {
+        '1': 'hero', '2': 'paper-pdf', '3': 'problem-lab', '4': 'overview-solution',
+        '5': 'synthetic-validation', '6': 'imputation-section', '7': 'dag-comparison',
+        '8': 'clinical-results', '9': 'table3-section', '0': 'extension-baselines',
+        'q': 'arch-hybrid', 'w': 'arch-stacking'
+    };
     document.addEventListener('keydown', (e) => {
         const tag = e.target && e.target.tagName;
         if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
-        if (SECTIONS[e.key]) {
-            const el = document.getElementById(SECTIONS[e.key]);
+        const k = e.key.toLowerCase();
+        if (SECTIONS[k]) {
+            const el = document.getElementById(SECTIONS[k]);
             if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             e.preventDefault();
             return;
         }
-        if (e.key === 'f' || e.key === 'F') { toggleFocusMode(); e.preventDefault(); return; }
+        if (k === 'f') { toggleFocusMode(); e.preventDefault(); return; }
         if (e.key === ' ') { e.preventDefault(); stepPresenter(); return; }
+    });
+
+    const presentBtn = document.getElementById('presentBtn');
+    if (presentBtn) {
+        presentBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+                document.body.classList.add('present-mode');
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                document.body.classList.remove('present-mode');
+            }
+        });
+    }
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) document.body.classList.remove('present-mode');
     });
 }
 
