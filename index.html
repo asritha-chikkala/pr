@@ -199,8 +199,17 @@
                     </div>
                 </div>
 
+                <!-- Interactive Evidence Controls -->
+                <div class="risk-controls-panel">
+                    <div class="rc-panel-header">
+                        <span class="rc-title">Adjust Evidence (Real-Time Inference)</span>
+                        <span class="rc-sub">Mutate any factor — P(LC) updates instantly · keys 1–5 navigate · F focus · Space auto-demo</span>
+                    </div>
+                    <div class="risk-controls" id="riskControls"></div>
+                </div>
+
                 <!-- Attributes Grid -->
-                <div class="compact-grid-wrapper">
+                <div class="compact-grid-wrapper" id="demoCompactGrid">
                     <!-- Demographics & Core Labs -->
                     <div class="compact-col">
                         <div class="compact-col-title">1. Demographics &amp; Core Labs</div>
@@ -1335,6 +1344,15 @@
         if (modal) modal.style.display = 'none';
     }
     </script>
+
+    <!-- Inference Trace Log (floating) -->
+    <div class="inference-trace" id="inferenceTrace">
+        <div class="trace-header">
+            <span class="trace-title">Inference Trace Log</span>
+            <button class="trace-toggle" id="btnToggleTrace" type="button">Hide</button>
+        </div>
+        <div class="trace-body" id="traceBody"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>

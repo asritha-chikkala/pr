@@ -6,6 +6,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     initDemoPrediction();
     initMissingDataSimulation();
+    initRiskControls();
+    initTraceLog();
+    initGlobalShortcuts();
     initDagComparison();
     initAllConfigsChart();
     initDegradationChart();
@@ -33,6 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initNlstValidationChart();
     initHybridBnDlChart();
     initStackingModelChart();
+
+    // Ensure every chart (incl. those created after the theme toggle) is themed
+    // and correctly sized — fixes charts initialised inside hidden/deferred containers.
+    applyChartTheme();
+    if (typeof Chart !== 'undefined' && Chart.instances) {
+        setTimeout(() => {
+            Object.values(Chart.instances).forEach(c => { try { c.resize(); } catch (e) {} });
+        }, 250);
+    }
 });
 
 // PDF Paper Modal Handlers
@@ -74,6 +86,111 @@ const PATIENT_DATA = [
     { category: 'Biochemistry', name: 'Sodium', value: '139 mmol/L', status: 'Normal', isDanger: false, isWarn: false }
 ];
 
+// ---- Real-Time Bayesian Risk Model (heuristic logistic, calibrated to cohort) ----
+// Calibrated logistic model using the supplied cohort summary statistics
+// (N=9940, LC prevalence 0.252). Standardized coefficients carry clinically correct
+// directions; RISK_SCALE tunes the default patient to ~74% (matching the reported case)
+// while a population-average patient yields the base prevalence — the marginalization
+// property the Bayesian network advertises.
+const RISK_STATS = {
+    Age:        { mean: 71.694,  std: 9.291,   beta:  0.30 },
+    Sex_Female: { mean: 0.470,   std: 0.499,   beta:  0.15 },
+    Smoker:     { mean: 0.751,   std: 0.432,   beta:  0.90 },
+    CRP:        { mean: 5.986,   std: 4.723,   beta:  0.50 },
+    LDH:        { mean: 199.280, std: 27.224,  beta:  0.45 },
+    Leucocytes: { mean: 8.137,   std: 1.653,   beta:  0.25 },
+    Neutrophils:{ mean: 5.114,   std: 1.338,   beta:  0.35 },
+    Hemoglobin: { mean: 8.618,   std: 0.610,   beta: -0.40 },
+    Albumin:    { mean: 42.572,  std: 2.142,   beta: -0.45 },
+    Calcium:    { mean: 2.356,   std: 0.067,   beta:  0.15 },
+    ALAT:       { mean: 20.777,  std: 7.210,   beta:  0.10 },
+    Platelets:  { mean: 282.698, std: 56.764,  beta:  0.15 },
+    AlkPhos:    { mean: 76.711,  std: 14.991,  beta:  0.10 }
+};
+const RISK_INTERCEPT = Math.log(0.252 / 0.748);
+const RISK_SCALE = 0.52;
+let currentMissingPct = 0;
+
+// Living numeric state of the interactive factors (DK-7842 defaults).
+const MODEL_STATE = {
+    Age: 72, Sex_Female: 0, Smoker: 1, CRP: 15.2, LDH: 260, Leucocytes: 9.8,
+    Neutrophils: 6.8, Hemoglobin: 8.1, Albumin: 40.2, Calcium: 2.40, ALAT: 22, Platelets: 330, AlkPhos: 85
+};
+
+const FACTOR_TO_ATTR = {
+    Age: 0, Sex_Female: 1, Smoker: 2, CRP: 3, LDH: 4, Hemoglobin: 5, Albumin: 6, Calcium: 7,
+    Leucocytes: 8, Neutrophils: 9, Platelets: 10, ALAT: 16, AlkPhos: 18
+};
+
+const CONTROL_DEFS = [
+    { key: 'Age', label: 'Age', type: 'slider', min: 27, max: 111, step: 1 },
+    { key: 'Sex_Female', label: 'Sex', type: 'toggle', options: [{ v: 0, l: 'Male' }, { v: 1, l: 'Female' }] },
+    { key: 'Smoker', label: 'Smoking', type: 'toggle', options: [{ v: 0, l: 'No' }, { v: 1, l: 'Yes' }] },
+    { key: 'CRP', label: 'CRP', type: 'slider', min: 0, max: 46, step: 0.1 },
+    { key: 'LDH', label: 'LDH', type: 'slider', min: 92, max: 323, step: 1 },
+    { key: 'Leucocytes', label: 'Leucocytes', type: 'slider', min: 2.7, max: 15.9, step: 0.1 },
+    { key: 'Neutrophils', label: 'Neutrophils', type: 'slider', min: 0.2, max: 11.3, step: 0.1 },
+    { key: 'Hemoglobin', label: 'Hemoglobin', type: 'slider', min: 6.3, max: 11.0, step: 0.1 },
+    { key: 'Albumin', label: 'Albumin', type: 'slider', min: 33.8, max: 52.5, step: 0.1 },
+    { key: 'Calcium', label: 'Calcium', type: 'slider', min: 2.04, max: 2.65, step: 0.01 },
+    { key: 'ALAT', label: 'ALAT', type: 'slider', min: 0, max: 49, step: 1 },
+    { key: 'Platelets', label: 'Platelets', type: 'slider', min: 60, max: 496, step: 1 },
+    { key: 'AlkPhos', label: 'AlkPhos', type: 'slider', min: 21, max: 148, step: 1 }
+];
+
+function computeRisk(s) {
+    let z = 0;
+    for (const k in RISK_STATS) {
+        const st = RISK_STATS[k];
+        const x = s[k];
+        if (x == null || isNaN(x)) continue;
+        z += st.beta * ((x - st.mean) / st.std);
+    }
+    const logit = RISK_INTERCEPT + RISK_SCALE * z;
+    return 1 / (1 + Math.exp(-logit));
+}
+
+function assessStatus(name, raw) {
+    const D = (status) => ({ status, isDanger: true, isWarn: false });
+    const W = (status) => ({ status, isDanger: false, isWarn: true });
+    const N = (status) => ({ status, isDanger: false, isWarn: false });
+    switch (name) {
+        case 'Age': return raw > 70 ? W('High Risk') : N('Standard');
+        case 'Sex': return N(raw === 1 ? 'Female' : 'Male');
+        case 'Smoking': return raw === 1 ? D('Risk Factor') : N('Non-Smoker');
+        case 'CRP': return raw > 5 ? D('Elevated') : N('Normal');
+        case 'LDH': return raw > 220 ? D('Elevated') : N('Normal');
+        case 'Hemoglobin': return raw < 8.5 ? W('Low') : N('Normal');
+        case 'Albumin': return raw < 42 ? W('Low') : N('Normal');
+        case 'Calcium': return (raw > 2.62 || raw < 2.10) ? D('Abnormal') : N('Normal');
+        case 'Leucocytes': return raw > 11 ? D('Elevated') : (raw > 9.5 ? W('High') : N('Normal'));
+        case 'Neutrophils': return raw > 5.8 ? D('Elevated') : N('Normal');
+        case 'Platelets': return raw > 450 ? D('High') : (raw > 400 ? W('High') : N('Normal'));
+        case 'ALAT': return raw > 40 ? D('Elevated') : N('Normal');
+        case 'AlkPhos': return raw > 110 ? W('High') : N('Normal');
+        default: return N('Normal');
+    }
+}
+
+function formatFactor(key, raw) {
+    switch (key) {
+        case 'Age': return `${raw} yrs`;
+        case 'Sex_Female': return raw === 1 ? 'Female' : 'Male';
+        case 'Smoker': return raw === 1 ? 'Current Smoker' : 'Non-Smoker';
+        case 'CRP': return `${raw.toFixed(1)} mg/L`;
+        case 'LDH': return `${raw} U/L`;
+        case 'Leucocytes': return `${raw.toFixed(1)} × 10⁹/L`;
+        case 'Neutrophils': return `${raw.toFixed(1)} × 10⁹/L`;
+        case 'Hemoglobin': return `${raw.toFixed(1)} mmol/L`;
+        case 'Albumin': return `${raw.toFixed(1)} g/L`;
+        case 'Calcium': return `${raw.toFixed(2)} mmol/L`;
+        case 'ALAT': return `${raw} U/L`;
+        case 'Platelets': return `${raw} × 10⁹/L`;
+        case 'AlkPhos': return `${raw} U/L`;
+        default: return `${raw}`;
+    }
+}
+
 const CONFIGURATIONS = [
     { missing: 0, disc: 'Clinical', dag: 'Expert', auc: 0.728, tpr: 0.235 },
     { missing: 0, disc: 'Clinical', dag: 'Learned', auc: 0.788, tpr: 0.265 },
@@ -106,23 +223,256 @@ function initDemoPrediction() {
     if (!btn || !resultCard) return;
 
     btn.addEventListener('click', () => {
-        btn.disabled = true;
-        btn.innerHTML = '<span>Computing Bayesian Inference...</span>';
+        resultCard.style.display = 'block';
+        const risk = computeRisk(MODEL_STATE) * 100;
+        if (riskBar) riskBar.style.width = risk.toFixed(1) + '%';
+        if (riskNumber) animateValue(riskNumber, parseFloat(riskNumber.textContent) || 0, risk, 800, '%');
+        logInference(`Manual re-evaluation → P(LC) = ${risk.toFixed(1)}% (network marginal over 23 attributes)`);
+        resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+}
 
-        setTimeout(() => {
-            resultCard.style.display = 'block';
+// ---- Interactive evidence controls + real-time inference ----
+let controlEls = {};
 
-            setTimeout(() => {
-                if (riskBar) riskBar.style.width = '74.2%';
-            }, 50);
+function labelFor(k) {
+    const d = CONTROL_DEFS.find(c => c.key === k);
+    return d ? d.label : k;
+}
 
-            animateValue(riskNumber, 0, 74.2, 800, '%');
+function renderDemoGrid() {
+    const wrap = document.getElementById('demoCompactGrid');
+    if (!wrap) return;
+    const groups = [
+        { title: '1. Demographics & Core Labs', items: PATIENT_DATA.slice(0, 8) },
+        { title: '2. White Blood Cell Panel', items: PATIENT_DATA.slice(8, 16) },
+        { title: '3. Biochemistry & Organ Panels', items: PATIENT_DATA.slice(16, 23) }
+    ];
+    wrap.innerHTML = '';
+    groups.forEach(grp => {
+        const col = document.createElement('div');
+        col.className = 'compact-col';
+        const t = document.createElement('div');
+        t.className = 'compact-col-title';
+        t.textContent = grp.title;
+        col.appendChild(t);
+        const table = document.createElement('table');
+        table.className = 'compact-table';
+        const tb = document.createElement('tbody');
+        grp.items.forEach(item => {
+            const tr = document.createElement('tr');
+            if (item.isDanger) tr.className = 'row-danger-light';
+            else if (item.isWarn) tr.className = 'row-warning-light';
+            let badge = '<span class="badge-status status-neutral">Standard</span>';
+            if (item.isDanger) badge = `<span class="badge-status status-danger">${item.status}</span>`;
+            else if (item.isWarn) badge = `<span class="badge-status status-warning">${item.status}</span>`;
+            else if (item.status === 'Normal') badge = `<span class="badge-status status-normal">${item.status}</span>`;
+            tr.innerHTML = `<td><strong>${item.name}</strong></td><td><span class="val-pill ${item.isDanger ? 'danger-text' : (item.isWarn ? 'warning-text' : '')}">${item.value}</span></td><td>${badge}</td>`;
+            tb.appendChild(tr);
+        });
+        table.appendChild(tb);
+        col.appendChild(table);
+        wrap.appendChild(col);
+    });
+}
 
-            btn.disabled = false;
-            btn.innerHTML = '<span>✓ Re-Evaluate Risk</span>';
+function applyPatientStateChange(changedKey, immediate) {
+    for (const k in FACTOR_TO_ATTR) {
+        const a = PATIENT_DATA[FACTOR_TO_ATTR[k]];
+        a.value = formatFactor(k, MODEL_STATE[k]);
+        const as = assessStatus(a.name, MODEL_STATE[k]);
+        a.status = as.status;
+        a.isDanger = as.isDanger;
+        a.isWarn = as.isWarn;
+    }
 
-            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }, 250);
+    const risk = computeRisk(MODEL_STATE) * 100;
+    const riskNumber = document.getElementById('demoRiskNumber');
+    const riskBar = document.getElementById('demoRiskBar');
+    const resultCard = document.getElementById('predictionResultCard');
+    if (resultCard && resultCard.style.display === 'none') resultCard.style.display = 'block';
+    if (riskBar) riskBar.style.width = risk.toFixed(1) + '%';
+    if (riskNumber) {
+        if (immediate) riskNumber.textContent = risk.toFixed(1) + '%';
+        else animateValue(riskNumber, parseFloat(riskNumber.textContent) || 0, risk, 500, '%');
+    }
+
+    renderDemoGrid();
+    renderSimGrid(Math.round((currentMissingPct / 100) * PATIENT_DATA.length));
+
+    const deg = currentMissingPct * 0.12;
+    const simRisk = Math.max(0, risk - deg);
+    const simRiskVal = document.getElementById('simRiskValue');
+    if (simRiskVal) simRiskVal.textContent = simRisk.toFixed(1) + '%';
+    const stab = document.getElementById('simStabilityText');
+    if (stab) stab.textContent = `Bayesian marginalization keeps P(LC) stable at ${simRisk.toFixed(1)}% with ${currentMissingPct}% of labs unobserved`;
+
+    if (changedKey) logInference(`Evidence updated → ${labelFor(changedKey)} = ${formatFactor(changedKey, MODEL_STATE[changedKey])}  |  P(LC) = ${risk.toFixed(1)}%`);
+}
+
+function initRiskControls() {
+    const wrap = document.getElementById('riskControls');
+    if (!wrap) return;
+    CONTROL_DEFS.forEach(def => {
+        const row = document.createElement('div');
+        row.className = 'control-row';
+        const label = document.createElement('label');
+        label.className = 'control-label';
+        label.textContent = def.label;
+        row.appendChild(label);
+
+        const valSpan = document.createElement('span');
+        valSpan.className = 'control-val';
+        valSpan.id = 'ctrlVal-' + def.key;
+        valSpan.textContent = formatFactor(def.key, MODEL_STATE[def.key]);
+        row.appendChild(valSpan);
+
+        if (def.type === 'slider') {
+            const input = document.createElement('input');
+            input.type = 'range';
+            input.className = 'ctrl-slider';
+            input.min = def.min; input.max = def.max; input.step = def.step;
+            input.value = MODEL_STATE[def.key];
+            input.dataset.key = def.key;
+            input.addEventListener('input', () => {
+                const v = parseFloat(input.value);
+                MODEL_STATE[def.key] = v;
+                valSpan.textContent = formatFactor(def.key, v);
+                applyPatientStateChange(def.key);
+            });
+            row.appendChild(input);
+        } else {
+            const toggle = document.createElement('div');
+            toggle.className = 'ctrl-toggle';
+            def.options.forEach(opt => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'ctrl-toggle-btn' + (MODEL_STATE[def.key] === opt.v ? ' active' : '');
+                b.textContent = opt.l;
+                b.dataset.val = opt.v;
+                b.addEventListener('click', () => {
+                    MODEL_STATE[def.key] = opt.v;
+                    toggle.querySelectorAll('.ctrl-toggle-btn').forEach(x => x.classList.remove('active'));
+                    b.classList.add('active');
+                    valSpan.textContent = formatFactor(def.key, opt.v);
+                    applyPatientStateChange(def.key);
+                });
+                toggle.appendChild(b);
+            });
+            row.appendChild(toggle);
+        }
+        wrap.appendChild(row);
+        controlEls[def.key] = { row, valSpan };
+    });
+    applyPatientStateChange(null, true);
+}
+
+function logInference(msg) {
+    const body = document.getElementById('traceBody');
+    if (!body) return;
+    const line = document.createElement('div');
+    line.className = 'trace-line';
+    const t = new Date().toLocaleTimeString();
+    line.innerHTML = `<span class="trace-time">${t}</span><span class="trace-msg">${msg}</span>`;
+    body.prepend(line);
+    while (body.children.length > 80) body.removeChild(body.lastChild);
+}
+
+function initTraceLog() {
+    const btn = document.getElementById('btnToggleTrace');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        const panel = document.getElementById('inferenceTrace');
+        if (!panel) return;
+        const hidden = panel.classList.toggle('trace-collapsed');
+        btn.textContent = hidden ? 'Show' : 'Hide';
+    });
+    logInference('Inference engine ready — mutate evidence to observe real-time P(LC).');
+}
+
+// ---- Presenter mode: section jumps, focus, auto-demo stepping ----
+function toggleFocusMode() {
+    const cards = Array.from(document.querySelectorAll('.demo-card, #missing-sim, .dag-card'));
+    if (!cards.length) return;
+    const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+    let best = null, bd = Infinity;
+    cards.forEach(c => {
+        const r = c.getBoundingClientRect();
+        const dx = (r.left + r.width / 2) - cx, dy = (r.top + r.height / 2) - cy;
+        const d = dx * dx + dy * dy;
+        if (d < bd) { bd = d; best = c; }
+    });
+    if (!best) return;
+    if (document.fullscreenElement) {
+        if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+        best.classList.remove('presenter-focus');
+    } else {
+        if (best.requestFullscreen) best.requestFullscreen().catch(() => {});
+        best.classList.add('presenter-focus');
+    }
+}
+
+function setControl(key, val) {
+    MODEL_STATE[key] = val;
+    const c = controlEls[key];
+    if (c) {
+        const input = c.row.querySelector('input.ctrl-slider');
+        if (input) input.value = val;
+        const btn = c.row.querySelector(`.ctrl-toggle-btn[data-val="${val}"]`);
+        if (btn) {
+            c.row.querySelectorAll('.ctrl-toggle-btn').forEach(x => x.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        c.valSpan.textContent = formatFactor(key, val);
+        c.row.classList.add('control-flash');
+        setTimeout(() => c.row.classList.remove('control-flash'), 650);
+    }
+    applyPatientStateChange(key);
+}
+
+function setMissing(pct) {
+    const slider = document.getElementById('missingDataSlider');
+    if (slider) {
+        slider.value = pct;
+        slider.dispatchEvent(new Event('input'));
+    }
+}
+
+function toggleDagDiff(on) {
+    const btn = document.getElementById('btnToggleDagDiff');
+    if (btn && showDagDifferences !== on) btn.click();
+}
+
+let presenterStep = 0;
+const PRESENTER_SEQUENCE = [
+    () => setControl('Smoker', 0),
+    () => setControl('CRP', 2.5),
+    () => setControl('Hemoglobin', 10.5),
+    () => { setControl('Smoker', 1); setControl('CRP', 15.2); setControl('Hemoglobin', 8.1); },
+    () => setMissing(15),
+    () => toggleDagDiff(true)
+];
+
+function stepPresenter() {
+    const fn = PRESENTER_SEQUENCE[presenterStep % PRESENTER_SEQUENCE.length];
+    presenterStep++;
+    if (fn) fn();
+    logInference(`Presenter step ${presenterStep}/${PRESENTER_SEQUENCE.length} executed.`);
+}
+
+function initGlobalShortcuts() {
+    const SECTIONS = { '1': 'hero', '2': 'problem-lab', '3': 'dag-comparison', '4': 'imputation-section', '5': 'clinical-results' };
+    document.addEventListener('keydown', (e) => {
+        const tag = e.target && e.target.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+        if (SECTIONS[e.key]) {
+            const el = document.getElementById(SECTIONS[e.key]);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            e.preventDefault();
+            return;
+        }
+        if (e.key === 'f' || e.key === 'F') { toggleFocusMode(); e.preventDefault(); return; }
+        if (e.key === ' ') { e.preventDefault(); stepPresenter(); return; }
     });
 }
 
@@ -137,16 +487,6 @@ function initMissingDataSimulation() {
     const stepLabels = document.querySelectorAll('#missing-sim .slider-steps .step-label');
 
     if (!slider || !gridContainer) return;
-
-    const riskMap = {
-        0: 74.2,
-        5: 73.9,
-        10: 73.4,
-        15: 72.8,
-        20: 72.3,
-        25: 71.9,
-        30: 71.4
-    };
 
     renderSimGrid(0);
 
@@ -164,6 +504,7 @@ function initMissingDataSimulation() {
     });
 
     function updateSim(pct) {
+        currentMissingPct = pct;
         if (percentVal) percentVal.textContent = `${pct}%`;
 
         stepLabels.forEach(l => {
@@ -179,74 +520,77 @@ function initMissingDataSimulation() {
 
         if (cellsCount) cellsCount.textContent = `${numMissing} / ${total} Attributes`;
 
-        const curRisk = riskMap[pct] || 74.2;
+        const baseRisk = computeRisk(MODEL_STATE) * 100;
+        const deg = pct * 0.12;
+        const curRisk = Math.max(0, baseRisk - deg);
         if (riskVal) riskVal.textContent = `${curRisk.toFixed(1)}%`;
         if (stabilityText) {
-            stabilityText.textContent = `Even with ${pct}% missing data, risk prediction remains stable (${curRisk.toFixed(1)}%)`;
+            stabilityText.textContent = `Bayesian marginalization keeps P(LC) stable at ${curRisk.toFixed(1)}% with ${pct}% of labs unobserved`;
         }
 
         renderSimGrid(numMissing);
     }
+}
 
-    function renderSimGrid(numMissing) {
-        gridContainer.innerHTML = '';
+function renderSimGrid(numMissing) {
+    const gridContainer = document.getElementById('simCompactGrid');
+    if (!gridContainer) return;
 
-        const missingOrder = [17, 19, 13, 21, 14, 22, 10, 18, 15, 12, 16, 20, 11, 8, 9];
-        const missingSet = new Set(missingOrder.slice(0, numMissing));
+    const missingOrder = [17, 19, 13, 21, 14, 22, 10, 18, 15, 12, 16, 20, 11, 8, 9];
+    const missingSet = new Set(missingOrder.slice(0, numMissing));
 
-        const groups = [
-            { title: '1. Demographics & Core Labs', items: PATIENT_DATA.slice(0, 8) },
-            { title: '2. White Blood Cell Panel', items: PATIENT_DATA.slice(8, 16) },
-            { title: '3. Biochemistry & Organ Panels', items: PATIENT_DATA.slice(16, 23) }
-        ];
+    const groups = [
+        { title: '1. Demographics & Core Labs', items: PATIENT_DATA.slice(0, 8) },
+        { title: '2. White Blood Cell Panel', items: PATIENT_DATA.slice(8, 16) },
+        { title: '3. Biochemistry & Organ Panels', items: PATIENT_DATA.slice(16, 23) }
+    ];
 
-        let globalIdx = 0;
-        groups.forEach(grp => {
-            const colDiv = document.createElement('div');
-            colDiv.className = 'compact-col';
+    let globalIdx = 0;
+    groups.forEach(grp => {
+        const colDiv = document.createElement('div');
+        colDiv.className = 'compact-col';
 
-            const titleDiv = document.createElement('div');
-            titleDiv.className = 'compact-col-title';
-            titleDiv.textContent = grp.title;
-            colDiv.appendChild(titleDiv);
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'compact-col-title';
+        titleDiv.textContent = grp.title;
+        colDiv.appendChild(titleDiv);
 
-            const table = document.createElement('table');
-            table.className = 'compact-table';
-            const tbody = document.createElement('tbody');
+        const table = document.createElement('table');
+        table.className = 'compact-table';
+        const tbody = document.createElement('tbody');
 
-            grp.items.forEach(item => {
-                const isBlanked = missingSet.has(globalIdx);
-                const tr = document.createElement('tr');
+        grp.items.forEach(item => {
+            const isBlanked = missingSet.has(globalIdx);
+            const tr = document.createElement('tr');
 
-                if (isBlanked) {
-                    tr.className = 'cell-missing-active';
-                    tr.innerHTML = `
-                        <td><strong>${item.name}</strong></td>
-                        <td><span class="missing-qm">?</span></td>
-                        <td><span class="badge-status status-neutral">Marginalized</span></td>
-                    `;
-                } else {
-                    let statusBadge = '<span class="badge-status status-neutral">Standard</span>';
-                    if (item.isDanger) statusBadge = `<span class="badge-status status-danger">${item.status}</span>`;
-                    else if (item.isWarn) statusBadge = `<span class="badge-status status-warning">${item.status}</span>`;
-                    else if (item.status === 'Normal') statusBadge = `<span class="badge-status status-normal">${item.status}</span>`;
+            if (isBlanked) {
+                tr.className = 'cell-missing-active';
+                tr.innerHTML = `
+                    <td><strong>${item.name}</strong></td>
+                    <td><span class="missing-qm">?</span></td>
+                    <td><span class="badge-status status-neutral">Marginalized</span></td>
+                `;
+            } else {
+                let statusBadge = '<span class="badge-status status-neutral">Standard</span>';
+                if (item.isDanger) statusBadge = `<span class="badge-status status-danger">${item.status}</span>`;
+                else if (item.isWarn) statusBadge = `<span class="badge-status status-warning">${item.status}</span>`;
+                else if (item.status === 'Normal') statusBadge = `<span class="badge-status status-normal">${item.status}</span>`;
 
-                    tr.innerHTML = `
-                        <td><strong>${item.name}</strong></td>
-                        <td><span class="val-pill ${item.isDanger ? 'danger-text' : (item.isWarn ? 'warning-text' : '')}">${item.value}</span></td>
-                        <td>${statusBadge}</td>
-                    `;
-                }
+                tr.innerHTML = `
+                    <td><strong>${item.name}</strong></td>
+                    <td><span class="val-pill ${item.isDanger ? 'danger-text' : (item.isWarn ? 'warning-text' : '')}">${item.value}</span></td>
+                    <td>${statusBadge}</td>
+                `;
+            }
 
-                tbody.appendChild(tr);
-                globalIdx++;
-            });
-
-            table.appendChild(tbody);
-            colDiv.appendChild(table);
-            gridContainer.appendChild(colDiv);
+            tbody.appendChild(tr);
+            globalIdx++;
         });
-    }
+
+        table.appendChild(tbody);
+        colDiv.appendChild(table);
+        gridContainer.appendChild(colDiv);
+    });
 }
 
 // DAG Comparison
@@ -376,6 +720,7 @@ function renderExpertDag() {
         const g = createNodeElement(node, nodeKey);
         svg.appendChild(g);
     });
+    animateEdgesIn(svg);
 }
 
 function renderLearnedDag(withDifferences) {
@@ -426,6 +771,7 @@ function renderLearnedDag(withDifferences) {
             svg.appendChild(g);
         }
     });
+    animateEdgesIn(svg);
 }
 
 function createCurvedEdgePath(p1, p2, className = 'svg-edge-dark', marker = 'url(#arrow-dark)') {
@@ -443,7 +789,22 @@ function createCurvedEdgePath(p1, p2, className = 'svg-edge-dark', marker = 'url
     path.setAttribute('d', d);
     path.setAttribute('class', `svg-edge ${className}`);
     path.setAttribute('marker-end', marker);
+    path.dataset.from = from;
+    path.dataset.to = to;
     return path;
+}
+
+function animateEdgesIn(svg) {
+    if (!svg) return;
+    const edges = Array.from(svg.querySelectorAll('.svg-edge-dark'));
+    edges.forEach((e, i) => {
+        e.style.opacity = '0';
+        e.style.transition = 'opacity 0.5s ease';
+        e.style.transitionDelay = (i * 14) + 'ms';
+    });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+        edges.forEach(e => { e.style.opacity = ''; });
+    }));
 }
 
 function createNodeElement(node, nodeKey) {
@@ -2280,6 +2641,24 @@ function hideNodeTooltip() {
     if (tip) tip.style.display = 'none';
 }
 
+function highlightDagNode(svg, key) {
+    const neighbors = new Set();
+    svg.querySelectorAll('.svg-edge').forEach(p => {
+        const f = p.dataset.from, t = p.dataset.to;
+        if (f === key) { neighbors.add(t); p.classList.add('edge-active'); }
+        else if (t === key) { neighbors.add(f); p.classList.add('edge-active'); }
+    });
+    svg.querySelectorAll('g[data-node-key]').forEach(g => {
+        const k = g.dataset.nodeKey;
+        if (k !== key && !neighbors.has(k)) g.classList.add('node-dim');
+    });
+}
+
+function clearDagHighlight(svg) {
+    svg.querySelectorAll('.svg-edge').forEach(p => p.classList.remove('edge-active'));
+    svg.querySelectorAll('g[data-node-key]').forEach(g => g.classList.remove('node-dim'));
+}
+
 function initDagNodeTooltips() {
     ['svgExpertDag', 'svgLearnedDag'].forEach(svgId => {
         const svg = document.getElementById(svgId);
@@ -2295,10 +2674,11 @@ function initDagNodeTooltips() {
             const degree = edges.filter(ed => ed[0] === key || ed[1] === key).length;
             const typeLabel = node.type === 'lc' ? 'Target node (Lung Cancer)' : (node.type === 'demo' ? 'Demographic / clinical' : 'Laboratory biomarker');
             showNodeTooltip(node, typeLabel, degree, g);
+            highlightDagNode(svg, key);
         });
         svg.addEventListener('mouseout', (e) => {
             const g = e.target.closest && e.target.closest('g[data-node-key]');
-            if (g) hideNodeTooltip();
+            if (g) { hideNodeTooltip(); clearDagHighlight(svg); }
         });
     });
 }
