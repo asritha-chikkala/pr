@@ -25,6 +25,9 @@
         </p>
     </div>
 
+    <!-- Floating Node Tooltip (DAG nodes) -->
+    <div class="floating-node-tooltip" id="floatingNodeTooltip" style="display: none;"></div>
+
     <!-- Navigation Bar -->
     <header class="navbar" id="navbar">
         <div class="nav-container">
@@ -46,6 +49,11 @@
                 <a href="#arch-hybrid" class="nav-link">Hybrid Arch</a>
                 <a href="#arch-stacking" class="nav-link">Stacking Arch</a>
             </nav>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+                <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
+            </div>
         </div>
     </header>
 
@@ -365,11 +373,12 @@ Lars Henrik Jensen
                         <h3 class="slider-title">Missing Data Percentage Slider</h3>
                         <p class="slider-hint">Simulates incomplete blood orders in routine primary care practice</p>
                     </div>
-                    <div class="slider-value-display">
-                        <span class="val-number" id="missingPercentVal">0%</span>
-                        <span class="val-label">Missing Labs</span>
-                    </div>
+                <div class="slider-value-display">
+                    <span class="val-number" id="missingPercentVal">0%</span>
+                    <span class="val-label">Missing Labs</span>
                 </div>
+                <button class="share-btn" id="btnCopyShare" type="button" title="Copy a shareable link with the current missing-data setting">🔗 Copy link</button>
+            </div>
 
                 <div class="range-slider-wrapper">
                     <input type="range" id="missingDataSlider" min="0" max="30" step="5" value="0" class="custom-slider" />
@@ -859,6 +868,87 @@ Lars Henrik Jensen
                 </div>
             </div>
 
+        </div>
+    </section>
+
+    <!-- BLOCK 8.5: Threshold & Confusion-Matrix Explorer -->
+    <section class="section-container bg-light" id="threshold-explorer">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">🎚️ Interactive Clinical Utility</div>
+                <h2 class="section-title">Threshold &amp; Confusion-Matrix Explorer</h2>
+                <p class="section-description">
+                    Pick a model configuration and a decision threshold, then see the live confusion matrix and diagnostic metrics derived from its P(LC=1) distribution at 0% missingness.
+                </p>
+            </div>
+
+            <div class="card interactive-matrix-card">
+                <div class="matrix-card-header">
+                    <div>
+                        <h3 class="chart-heading">Configuration</h3>
+                        <span class="chart-subheading">P(LC=1) density from the 0% missingness evaluation</span>
+                    </div>
+                    <div class="threshold-slider-group">
+                        <label for="thresholdSlider">Threshold</label>
+                        <input type="range" id="thresholdSlider" min="0" max="1" step="0.05" value="0.5" />
+                        <span id="thresholdVal" style="font-family: ui-monospace, monospace; font-weight: 700;">0.50</span>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="align-items: start;">
+                    <div>
+                        <label class="subheading-tag" for="configSelect" style="display: block; margin-bottom: 8px;">Model configuration</label>
+                        <select id="configSelect" class="btn btn-secondary btn-sm" style="width: 100%; text-align: left;">
+                            <option value="0">Clinical / Expert (AUC 0.728)</option>
+                            <option value="1">Clinical / Learned (AUC 0.788)</option>
+                            <option value="2">DataDriven / Expert (AUC 0.840)</option>
+                            <option value="3">DataDriven / Learned (AUC 0.886)</option>
+                        </select>
+
+                        <div class="confusion-matrix-grid mt-3">
+                            <div></div>
+                            <div class="matrix-header-col">Pred Neg</div>
+                            <div class="matrix-header-col">Pred Pos</div>
+
+                            <div class="matrix-header-row">Non-LC</div>
+                            <div class="matrix-cell">
+                                <span class="cell-type">TN</span>
+                                <span class="cell-val" id="tnVal">0</span>
+                                <span class="cell-sub" id="tnPct">0%</span>
+                            </div>
+                            <div class="matrix-cell">
+                                <span class="cell-type">FP</span>
+                                <span class="cell-val" id="fpVal">0</span>
+                                <span class="cell-sub" id="fpPct">0%</span>
+                            </div>
+
+                            <div class="matrix-header-row">LC</div>
+                            <div class="matrix-cell">
+                                <span class="cell-type">FN</span>
+                                <span class="cell-val" id="fnVal">0</span>
+                                <span class="cell-sub" id="fnPct">0%</span>
+                            </div>
+                            <div class="matrix-cell">
+                                <span class="cell-type">TP</span>
+                                <span class="cell-val" id="tpVal">0</span>
+                                <span class="cell-sub" id="tpPct">0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="matrix-metrics-panel">
+                        <p class="metrics-panel-title">Diagnostic metrics</p>
+                        <div class="diagnostic-metric-row"><span class="diag-label">Sensitivity (TPR)</span><span class="diag-val" id="sensVal">-</span></div>
+                        <div class="diagnostic-metric-row"><span class="diag-label">Specificity (TNR)</span><span class="diag-val" id="specVal">-</span></div>
+                        <div class="diagnostic-metric-row"><span class="diag-label">PPV</span><span class="diag-val" id="ppvVal">-</span></div>
+                        <div class="diagnostic-metric-row"><span class="diag-label">NPV</span><span class="diag-val" id="npvVal">-</span></div>
+                        <div class="diagnostic-metric-row"><span class="diag-label">Accuracy</span><span class="diag-val" id="accVal">-</span></div>
+                        <p class="sim-sub-explanation" style="margin-top: 10px;">
+                            Counts are scaled to the paper's cohort (Non-LC n=7435, LC n=2505). The 5% clinical-utility cutoff is a reference point on the threshold slider.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

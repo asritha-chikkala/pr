@@ -18,6 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initOriginalModalHandler();
     initArchDiagrams();
 
+    initThemeToggle();
+    initMobileNav();
+    initDagNodeTooltips();
+    initThresholdExplorer();
+    initShareableState();
+    initLazyImages();
+
     // Colab Research Extension Line Charts (Strict Monochrome & Dual Subplots)
     initBnVsMlChart();
     initBnVsMlTprChart();
@@ -441,6 +448,8 @@ function createCurvedEdgePath(p1, p2, className = 'svg-edge-dark', marker = 'url
 function createNodeElement(node, nodeKey) {
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('transform', `translate(${node.x}, ${node.y})`);
+    g.dataset.nodeKey = nodeKey;
+    g.style.cursor = 'pointer';
 
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
@@ -2146,4 +2155,197 @@ function initArchDiagrams() {
     if (document.getElementById('canvas1')) new Diagram(document.getElementById('canvas1'), document.getElementById('legend1'), DIAGRAM_1);
     if (document.getElementById('canvas2')) new Diagram(document.getElementById('canvas2'), document.getElementById('legend2'), DIAGRAM_2);
     if (document.getElementById('canvas3')) new Diagram(document.getElementById('canvas3'), document.getElementById('legend3'), DIAGRAM_3);
+}
+
+/* ===== Demo Enhancements ===== */
+
+function initThemeToggle() {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    const root = document.documentElement;
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = stored || (prefersDark ? 'dark' : 'light');
+    applyTheme(initial);
+
+    btn.addEventListener('click', () => {
+        const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        applyTheme(next);
+        localStorage.setItem('theme', next);
+    });
+
+    function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        btn.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    }
+}
+
+function initMobileNav() {
+    const btn = document.getElementById('navToggle');
+    const navbar = document.getElementById('navbar');
+    if (!btn || !navbar) return;
+    btn.addEventListener('click', () => {
+        const open = navbar.classList.toggle('nav-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    navbar.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            navbar.classList.remove('nav-open');
+            btn.setAttribute('aria-expanded', 'false');
+        });
+    });
+}
+
+function showNodeTooltip(node, typeLabel, degree, g) {
+    const tip = document.getElementById('floatingNodeTooltip');
+    if (!tip) return;
+    const label = node.fullLabel || node.label;
+    tip.innerHTML = '<div class="nt-title">' + label + '</div><div class="nt-type">' + typeLabel + '</div><div class="nt-detail">Connected by ' + degree + ' edge' + (degree === 1 ? '' : 's') + ' in the graph.</div>';
+    const rect = g.getBoundingClientRect();
+    tip.style.display = 'block';
+    let left = rect.right + 8;
+    let top = rect.top;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+    const tr = tip.getBoundingClientRect();
+    if (tr.right > window.innerWidth - 8) tip.style.left = (rect.left - tr.width - 8) + 'px';
+    if (tr.bottom > window.innerHeight - 8) tip.style.top = (window.innerHeight - tr.height - 8) + 'px';
+}
+
+function hideNodeTooltip() {
+    const tip = document.getElementById('floatingNodeTooltip');
+    if (tip) tip.style.display = 'none';
+}
+
+function initDagNodeTooltips() {
+    ['svgExpertDag', 'svgLearnedDag'].forEach(svgId => {
+        const svg = document.getElementById(svgId);
+        if (!svg) return;
+        const isExpert = svgId === 'svgExpertDag';
+        const edges = isExpert ? EXPERT_EDGES : LEARNED_BASE_EDGES;
+        svg.addEventListener('mouseover', (e) => {
+            const g = e.target.closest && e.target.closest('g[data-node-key]');
+            if (!g) return;
+            const key = g.dataset.nodeKey;
+            const node = DAG_NODES[key];
+            if (!node) return;
+            const degree = edges.filter(ed => ed[0] === key || ed[1] === key).length;
+            const typeLabel = node.type === 'lc' ? 'Target node (Lung Cancer)' : (node.type === 'demo' ? 'Demographic / clinical' : 'Laboratory biomarker');
+            showNodeTooltip(node, typeLabel, degree, g);
+        });
+        svg.addEventListener('mouseout', (e) => {
+            const g = e.target.closest && e.target.closest('g[data-node-key]');
+            if (g) hideNodeTooltip();
+        });
+    });
+}
+
+function initThresholdExplorer() {
+    const slider = document.getElementById('thresholdSlider');
+    const valEl = document.getElementById('thresholdVal');
+    const select = document.getElementById('configSelect');
+    if (!slider || !select) return;
+
+    const DIST = [
+        { name: 'Clinical / Expert', nonLc: [2.5,7.8,4.2,3.1,2.0,1.2,0.8,0.6,0.4,0.3,0.1], lc: [0.5,1.5,3.2,2.4,3.8,1.9,1.2,1.0,0.8,0.6,0.3] },
+        { name: 'Clinical / Learned', nonLc: [4.4,5.5,2.8,3.8,2.9,1.8,1.2,0.8,0.5,0.3,0.1], lc: [0.3,0.8,1.5,2.2,2.3,1.7,1.4,1.3,0.8,0.5,0.2] },
+        { name: 'DataDriven / Expert', nonLc: [3.4,5.3,3.1,1.6,1.1,0.7,0.5,0.3,0.2,0.1,0.0], lc: [0.2,0.9,2.0,1.2,1.1,0.8,0.7,0.6,0.5,0.6,4.3] },
+        { name: 'DataDriven / Learned', nonLc: [10.5,3.0,1.6,1.2,0.7,0.4,0.2,0.1,0.0,0.0,0.0], lc: [0.2,0.8,1.1,1.0,0.9,1.1,1.0,0.9,1.2,1.6,5.6] }
+    ];
+    const N_NONLC = 7435, N_LC = 2505;
+    const probs = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+
+    function pct(x) { return (x * 100).toFixed(1) + '%'; }
+    function setCell(base, val, total) {
+        document.getElementById(base + 'Val').textContent = val;
+        document.getElementById(base + 'Pct').textContent = pct(val / total);
+    }
+
+    function update() {
+        const t = parseFloat(slider.value);
+        valEl.textContent = t.toFixed(2);
+        const d = DIST[parseInt(select.value, 10)];
+        let tn = 0, fp = 0, fn = 0, tp = 0, sNon = 0, sLc = 0;
+        for (let i = 0; i < probs.length; i++) {
+            const pos = probs[i] >= t;
+            sNon += d.nonLc[i]; sLc += d.lc[i];
+            if (pos) { fp += d.nonLc[i]; tp += d.lc[i]; }
+            else { tn += d.nonLc[i]; fn += d.lc[i]; }
+        }
+        const fNon = N_NONLC / sNon, fLc = N_LC / sLc;
+        tn = Math.round(tn * fNon); fp = Math.round(fp * fNon);
+        fn = Math.round(fn * fLc); tp = Math.round(tp * fLc);
+        const total = tn + fp + fn + tp;
+        setCell('tn', tn, total); setCell('fp', fp, total);
+        setCell('fn', fn, total); setCell('tp', tp, total);
+        const sens = (tp + fn) ? tp / (tp + fn) : 0;
+        const spec = (tn + fp) ? tn / (tn + fp) : 0;
+        const ppv = (tp + fp) ? tp / (tp + fp) : 0;
+        const npv = (tn + fn) ? tn / (tn + fn) : 0;
+        const acc = (tp + tn) / total;
+        document.getElementById('sensVal').textContent = pct(sens);
+        document.getElementById('specVal').textContent = pct(spec);
+        document.getElementById('ppvVal').textContent = pct(ppv);
+        document.getElementById('npvVal').textContent = pct(npv);
+        document.getElementById('accVal').textContent = pct(acc);
+    }
+
+    slider.addEventListener('input', update);
+    select.addEventListener('change', update);
+    update();
+}
+
+function initShareableState() {
+    const slider = document.getElementById('missingDataSlider');
+    const btn = document.getElementById('btnCopyShare');
+    if (!slider) return;
+
+    function syncFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const m = params.get('missing');
+        if (m !== null && !isNaN(parseInt(m, 10))) {
+            const v = Math.max(0, Math.min(30, parseInt(m, 10)));
+            slider.value = v;
+            slider.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }
+    function pushToUrl() {
+        const params = new URLSearchParams(window.location.search);
+        params.set('missing', slider.value);
+        const newUrl = window.location.pathname + '?' + params.toString() + window.location.hash;
+        window.history.replaceState(null, '', newUrl);
+    }
+    slider.addEventListener('input', pushToUrl);
+    syncFromUrl();
+
+    if (btn) {
+        btn.addEventListener('click', () => {
+            pushToUrl();
+            const url = window.location.href;
+            const done = () => {
+                btn.textContent = '✓ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '🔗 Copy link'; btn.classList.remove('copied'); }, 1500);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(done).catch(() => fallbackCopy(url, done));
+            } else {
+                fallbackCopy(url, done);
+            }
+        });
+    }
+    function fallbackCopy(text, done) {
+        const ta = document.createElement('textarea');
+        ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+    }
+}
+
+function initLazyImages() {
+    document.querySelectorAll('img').forEach(img => {
+        if (!img.hasAttribute('loading')) img.loading = 'lazy';
+        img.decoding = 'async';
+    });
 }

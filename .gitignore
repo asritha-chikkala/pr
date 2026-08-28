@@ -1,0 +1,20 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Python (future Colab / notebook extension under notebooks/ or src/)
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# Node (if tooling is added later)
+node_modules/
+
+# Local dev / logs
+*.log
