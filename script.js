@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initThresholdExplorer();
     initShareableState();
     initLazyImages();
+    initEscToClose();
 
     // Colab Research Extension Line Charts (Strict Monochrome & Dual Subplots)
     initBnVsMlChart();
@@ -656,6 +657,8 @@ function initImputationChart() {
 
 // 16 Configurations Bar Chart (Strict Monochrome)
 let configsBarChart = null;
+let currentConfigs = CONFIGURATIONS;
+let currentView = 'all';
 
 function initAllConfigsChart() {
     const canvas = document.getElementById('allConfigsChart');
@@ -695,15 +698,14 @@ function initAllConfigsChart() {
                     cornerRadius: 6,
                     callbacks: {
                         title: (items) => {
-                            const c = CONFIGURATIONS[items[0].dataIndex];
-                            return `${c.disc} + ${c.dag} (${c.missing}% Missing)`;
+                            const c = currentConfigs[items[0].dataIndex];
+                            return c.missing !== '' ? `${c.disc} + ${c.dag} (${c.missing}% Missing)` : `${c.disc} ${c.dag}`.trim();
                         },
                         label: (item) => {
-                            const c = CONFIGURATIONS[item.dataIndex];
-                            return [
-                                `AUC: ${c.auc.toFixed(3)}`,
-                                `TPR@95%: ${c.tpr.toFixed(3)}`
-                            ];
+                            const c = currentConfigs[item.dataIndex];
+                            const lines = [`AUC: ${c.auc.toFixed(3)}`];
+                            if (c.tpr != null) lines.push(`TPR@95%: ${c.tpr.toFixed(3)}`);
+                            return lines;
                         }
                     }
                 }
@@ -735,29 +737,49 @@ function initAllConfigsChart() {
 
 function updateConfigsChartView(view) {
     if (!configsBarChart) return;
+    currentView = view;
+    const p = chartPalette();
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const bestGrad = dark ? ['#f2f3f5', '#c7ccd3', '#9097a1', '#646b75'] : ['#1a1a1a', '#444444', '#777777', '#aaaaaa'];
+    const cmpGrad = dark ? ['#777777', '#9aa1ab', '#3a3f47', '#f2f3f5'] : ['#888888', '#555555', '#cbd5e1', '#1a1a1a'];
 
     if (view === 'all') {
+        currentConfigs = CONFIGURATIONS;
         configsBarChart.data.labels = CONFIGURATIONS.map(c => `${c.missing}% | ${c.disc.substring(0, 4)}/${c.dag.substring(0, 3)}`);
         configsBarChart.data.datasets[0].data = CONFIGURATIONS.map(c => c.auc);
         configsBarChart.data.datasets[0].backgroundColor = CONFIGURATIONS.map(c => {
-            if (c.isBest) return '#1a1a1a';
-            if (c.disc === 'DataDriven') return '#555555';
-            return '#cbd5e1';
+            if (c.isBest) return p.ink;
+            if (c.disc === 'DataDriven') return p.mid;
+            return p.light;
         });
     } else if (view === 'best') {
         const topPerMissing = [CONFIGURATIONS[3], CONFIGURATIONS[7], CONFIGURATIONS[11], CONFIGURATIONS[15]];
+        currentConfigs = topPerMissing;
         configsBarChart.data.labels = topPerMissing.map(c => `Best @ ${c.missing}% Missing`);
         configsBarChart.data.datasets[0].data = topPerMissing.map(c => c.auc);
-        configsBarChart.data.datasets[0].backgroundColor = ['#1a1a1a', '#444444', '#777777', '#aaaaaa'];
+        configsBarChart.data.datasets[0].backgroundColor = bestGrad;
     } else if (view === 'comparison') {
+        currentConfigs = [
+            { disc: 'Paper', dag: 'Reported', missing: '', auc: 0.756, tpr: null },
+            { disc: 'DES', dag: 'ML Model', missing: '', auc: 0.770, tpr: null },
+            { disc: 'Your', dag: 'Baseline', missing: '', auc: 0.728, tpr: null },
+            { disc: 'Your', dag: 'Best Ext', missing: '', auc: 0.886, tpr: null }
+        ];
         configsBarChart.data.labels = [
             'Paper Reported (0.756)',
             'DES ML Model (0.770)',
             'Your Baseline (0.728)',
             'Your Best Extension (0.886)'
         ];
-        configsBarChart.data.datasets[0].data = [0.756, 0.770, 0.728, 0.886];
-        configsBarChart.data.datasets[0].backgroundColor = ['#888888', '#555555', '#cbd5e1', '#1a1a1a'];
+        configsBarChart.data.datasets[0].data = currentConfigs.map(c => c.auc);
+        configsBarChart.data.datasets[0].backgroundColor = cmpGrad;
+    }
+
+    if (configsBarChart.options.scales) {
+        Object.values(configsBarChart.options.scales).forEach(ax => {
+            if (ax && ax.ticks) ax.ticks.color = p.text;
+            if (ax && ax.grid) ax.grid.color = p.grid;
+        });
     }
 
     configsBarChart.update();
@@ -1629,7 +1651,14 @@ function animateValue(obj, start, end, duration, suffix = '', decimals = 1) {
 }
 
 // ARCHITECTURE DIAGRAM ENGINE (Preserved 100% Intact from provided HTML file)
+function redrawDiagrams() {
+    if (window.__diagramInstances) {
+        window.__diagramInstances.forEach(function(d) { d.draw(); });
+    }
+}
+
 function initArchDiagrams() {
+    window.__diagramInstances = [];
     const CATS = {
         data:   { fill:'#eef0ee', stroke:'#5c6b60', text:'#2a332c', label:'Data / Cohort' },
         prep:   { fill:'#eaeef2', stroke:'#4f6478', text:'#25313d', label:'Preprocessing' },
@@ -1643,6 +1672,25 @@ function initArchDiagrams() {
     };
 
     const FONT_SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif";
+
+    function diagramPalette(){
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        return {
+            dark: dark,
+            bg: dark ? '#1a1d21' : '#ffffff',
+            edge: dark ? '#aab0b8' : '#4a4a46',
+            edgeSel: dark ? '#e6e6e6' : '#1a1a18',
+            edgeLabel: dark ? '#c2c7ce' : '#6b6b64',
+            groupStroke: dark ? '#5f6772' : '#9a978f',
+            groupFill: dark ? 'rgba(255,255,255,0.04)' : 'rgba(150,145,130,0.05)',
+            groupLabel: dark ? '#e6e9ed' : '#726f66',
+            groupLabelBg: dark ? '#2a2f36' : '#f7f7f4',
+            laneLabel: dark ? '#aab0b8' : '#9a968c',
+            selBorder: dark ? '#e6e6e6' : '#1a1a18',
+            outputFill: dark ? '#33425a' : '#1f2a37',
+            outputStroke: dark ? '#8aa0bd' : '#1f2a37'
+        };
+    }
 
     function roundRect(ctx,x,y,w,h,r){
         ctx.beginPath();
@@ -1832,10 +1880,10 @@ function initArchDiagrams() {
 
         var dimmed = this.selectedId && !(this.pathSet && this.pathSet[e.from] && this.pathSet[e.to]);
         var isHoverPath = this.hoverId && this.hoverPathSet && this.hoverPathSet[e.from] && this.hoverPathSet[e.to];
-        var color = '#4a4a46';
+        var color = this.palette.edge;
         var lw = 1.6;
         if (this.selectedId){
-            if (!dimmed){ color = '#1a1a18'; lw = 2.2; }
+            if (!dimmed){ color = this.palette.edgeSel; lw = 2.2; }
         }
         ctx.globalAlpha = dimmed ? 0.18 : 1;
         ctx.strokeStyle = color;
@@ -1867,7 +1915,7 @@ function initArchDiagrams() {
         if (e.label){
             ctx.globalAlpha = dimmed ? 0.25 : 1;
             ctx.font = '10.5px ' + FONT_SANS;
-            ctx.fillStyle = '#6b6b64';
+            ctx.fillStyle = this.palette.edgeLabel;
             var lx, ly;
             if ((fromSide==='bottom'||fromSide==='top')){
                 lx = (p2.x); ly = (bendY!==undefined?bendY:(p1.y+p2.y)/2) - 5;
@@ -1885,22 +1933,22 @@ function initArchDiagrams() {
         ctx.save();
         ctx.setLineDash([5,4]);
         ctx.lineWidth = 1.3;
-        ctx.strokeStyle = '#9a978f';
-        ctx.fillStyle = 'rgba(150,145,130,0.05)';
+        ctx.strokeStyle = this.palette.groupStroke;
+        ctx.fillStyle = this.palette.groupFill;
         roundRect(ctx, g.x, g.y, g.w, g.h, 8);
         ctx.fill();
         ctx.stroke();
         ctx.restore();
         ctx.font = '700 11px ' + FONT_SANS;
-        ctx.fillStyle = '#726f66';
+        ctx.fillStyle = this.palette.groupLabel;
         ctx.textAlign = 'left';
         ctx.save();
         ctx.textBaseline = 'middle';
         var padX = 12;
         var labelW = ctx.measureText(g.label.toUpperCase()).width + 16;
-        ctx.fillStyle = '#f7f7f4';
+        ctx.fillStyle = this.palette.groupLabelBg;
         ctx.fillRect(g.x+padX-4, g.y-8, labelW, 16);
-        ctx.fillStyle = '#726f66';
+        ctx.fillStyle = this.palette.groupLabel;
         ctx.fillText(g.label.toUpperCase(), g.x+padX, g.y);
         ctx.restore();
     };
@@ -1912,7 +1960,7 @@ function initArchDiagrams() {
         if (l.label){
             ctx.save();
             ctx.font = '700 10.5px ' + FONT_SANS;
-            ctx.fillStyle = '#9a968c';
+            ctx.fillStyle = this.palette.laneLabel;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'middle';
             var lx = 26, ly = l.y + l.h/2;
@@ -1940,6 +1988,7 @@ function initArchDiagrams() {
 
         var fill = cat.fill, stroke = cat.stroke, lw = 1.4;
         if (n.cat==='output'){ fill = cat.fill; }
+        if (this.palette.dark && n.cat==='output'){ fill = this.palette.outputFill; stroke = this.palette.outputStroke; }
         if (isHover || isSelected){ lw = 2.6; }
         else if (inHoverPath){ lw = 2.0; }
 
@@ -1952,7 +2001,7 @@ function initArchDiagrams() {
 
         if (isSelected){
             roundRect(ctx, n.x-3.5, n.y-3.5, n.w+7, n.h+7, 9);
-            ctx.strokeStyle = '#1a1a18';
+            ctx.strokeStyle = this.palette.selBorder;
             ctx.lineWidth = 1.1;
             ctx.setLineDash([3,2]);
             ctx.stroke();
@@ -1992,8 +2041,9 @@ function initArchDiagrams() {
 
     Diagram.prototype.draw = function(){
         var ctx = this.ctx;
+        this.palette = diagramPalette();
         ctx.clearRect(0,0,this.cfg.W,this.cfg.H);
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = this.palette.bg;
         ctx.fillRect(0,0,this.cfg.W,this.cfg.H);
 
         if (this.cfg.lanes){ this.cfg.lanes.forEach(this.drawLane.bind(this)); }
@@ -2152,9 +2202,19 @@ function initArchDiagrams() {
         ]
     };
 
-    if (document.getElementById('canvas1')) new Diagram(document.getElementById('canvas1'), document.getElementById('legend1'), DIAGRAM_1);
-    if (document.getElementById('canvas2')) new Diagram(document.getElementById('canvas2'), document.getElementById('legend2'), DIAGRAM_2);
-    if (document.getElementById('canvas3')) new Diagram(document.getElementById('canvas3'), document.getElementById('legend3'), DIAGRAM_3);
+    if (document.getElementById('canvas1')) window.__diagramInstances.push(new Diagram(document.getElementById('canvas1'), document.getElementById('legend1'), DIAGRAM_1));
+    if (document.getElementById('canvas2')) window.__diagramInstances.push(new Diagram(document.getElementById('canvas2'), document.getElementById('legend2'), DIAGRAM_2));
+    if (document.getElementById('canvas3')) window.__diagramInstances.push(new Diagram(document.getElementById('canvas3'), document.getElementById('legend3'), DIAGRAM_3));
+
+    if (typeof MutationObserver !== 'undefined') {
+        var themeTarget = document.documentElement;
+        var themeObserver = new MutationObserver(function(muts) {
+            for (var i = 0; i < muts.length; i++) {
+                if (muts[i].attributeName === 'data-theme') { redrawDiagrams(); break; }
+            }
+        });
+        themeObserver.observe(themeTarget, { attributes: true, attributeFilter: ['data-theme'] });
+    }
 }
 
 /* ===== Demo Enhancements ===== */
@@ -2176,8 +2236,10 @@ function initThemeToggle() {
 
     function applyTheme(theme) {
         root.setAttribute('data-theme', theme);
-        btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        btn.setAttribute('aria-checked', theme === 'dark' ? 'true' : 'false');
         btn.setAttribute('title', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+        applyChartTheme();
+        redrawDiagrams();
     }
 }
 
@@ -2347,5 +2409,61 @@ function initLazyImages() {
     document.querySelectorAll('img').forEach(img => {
         if (!img.hasAttribute('loading')) img.loading = 'lazy';
         img.decoding = 'async';
+    });
+}
+
+function chartPalette() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    return dark
+        ? { ink: '#e8eaed', mid: '#9aa1ab', light: '#3a3f47', grid: 'rgba(255,255,255,0.09)', text: '#b9bec6', line: '#e8eaed' }
+        : { ink: '#1a1a1a', mid: '#555555', light: '#cbd5e1', grid: 'rgba(0,0,0,0.05)', text: '#555555', line: '#1a1a1a' };
+}
+
+function recolorChart(chart) {
+    if (!chart) return;
+    const p = chartPalette();
+    const fix = (v) => {
+        if (Array.isArray(v)) return v.map(fix);
+        if (typeof v !== 'string') return v;
+        if (v === '#1a1a1a') return p.ink;
+        if (v === '#555555') return p.mid;
+        if (v === '#cbd5e1') return p.light;
+        if (v.indexOf('rgba(0, 0, 0') === 0) return p.grid;
+        return v;
+    };
+    (chart.data.datasets || []).forEach(ds => {
+        if ('borderColor' in ds) ds.borderColor = fix(ds.borderColor);
+        if ('backgroundColor' in ds) ds.backgroundColor = fix(ds.backgroundColor);
+    });
+    const scales = chart.options && chart.options.scales;
+    if (scales) {
+        Object.keys(scales).forEach(k => {
+            const ax = scales[k];
+            if (!ax) return;
+            if (ax.ticks) ax.ticks.color = p.text;
+            if (ax.grid) ax.grid.color = p.grid;
+            if (ax.title && ax.title.display) ax.title.color = p.text;
+        });
+    }
+    const legend = chart.options && chart.options.plugins && chart.options.plugins.legend;
+    if (legend && legend.labels) legend.labels.color = p.text;
+    chart.update('none');
+}
+
+function applyChartTheme() {
+    if (typeof Chart === 'undefined' || !Chart.instances) return;
+    Object.values(Chart.instances).forEach(chart => {
+        if (chart && chart === configsBarChart) { updateConfigsChartView(currentView); return; }
+        recolorChart(chart);
+    });
+}
+
+function initEscToClose() {
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const pm = document.getElementById('paperPdfModal');
+        const im = document.getElementById('globalImageModal');
+        if (pm && pm.style.display !== 'none') closePaperPdfModal();
+        if (im && im.style.display !== 'none') closeImageModal();
     });
 }

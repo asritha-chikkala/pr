@@ -7,7 +7,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css" />
@@ -47,7 +47,13 @@
             </nav>
 
             <div class="nav-actions">
-                <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">🌙</button>
+                <button class="theme-toggle" id="themeToggle" type="button" role="switch" aria-checked="false" aria-label="Toggle dark mode" title="Toggle dark mode">
+                    <span class="tt-track">
+                        <span class="tt-icon tt-sun">☀️</span>
+                        <span class="tt-icon tt-moon">🌙</span>
+                        <span class="tt-knob"></span>
+                    </span>
+                </button>
                 <button class="nav-toggle" id="navToggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false">☰</button>
             </div>
         </div>
@@ -77,14 +83,16 @@
                 </p>
             </div>
             
-            <div class="authors-card">
+            <div class="authors-card" style="margin-top: 36px;">
                 <p class="authors-names">
                     <strong>Authors :</strong> Margrethe Bang Henriksen, Lars Henrik Jensen, Florian Van Daalen, Leonard Wee, Claus Lohman Brasen, Ole Hilberg, Torben Frostrup Hansen, Inigo Bermejo
                 </p>
                 <p style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 8px; line-height: 1.6;">
                     <strong>Interactive Demo of Reproducing and Extension by Asritha Chikkala, Aditya Anil, Manognya, Sai Reddy, Thanvindhar<br>
                     Under supervision and guidance of : Dr. V. M. K. Prasad Goura, Assistant Professor (Sl. Gr.), Department of Mathematics, School of Computing, Amrita Vishwa Vidyapeetham, Amaravati</strong>
+            <br>
                 </p>
+                <p style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary); margin: 0 0 6px;">Keywords:</p>
                 <div class="publication-meta">
                     <span class="meta-tag">Lung Cancer</span>
                     <span class="meta-tag">Bayesian Networks</span>
@@ -1239,7 +1247,7 @@
         <div class="container footer-container">
             
             <!-- Thank You & Intelligent Quote Block -->
-            <div class="card mb-4" style="background: #ffffff; border: 1.5px solid var(--border); padding: 32px 24px; text-align: center; border-radius: var(--radius-lg);">
+            <div class="card mb-4" style="background: var(--bg-card); border: 1.5px solid var(--border); padding: 32px 24px; text-align: center; border-radius: var(--radius-lg);">
                 <div style="font-size: 2.2rem; font-weight: 900; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 12px;">
                     🙏 Thank You! 🙏
                 </div>
