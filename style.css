@@ -179,10 +179,29 @@ body {
     transition: var(--transition);
     padding: 4px 6px;
     white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+}
+
+.nav-link .nav-label {
+    display: block;
+}
+
+.nav-link .nav-hash {
+    font-size: 0.65rem;
+    line-height: 1;
+    opacity: 0.45;
+    margin-top: 1px;
 }
 
 .nav-link:hover {
     color: var(--text-primary);
+}
+
+.nav-link:hover .nav-hash {
+    opacity: 0.85;
 }
 
 .nav-action-link {
