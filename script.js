@@ -535,6 +535,7 @@ function initMissingDataSimulation() {
 function renderSimGrid(numMissing) {
     const gridContainer = document.getElementById('simCompactGrid');
     if (!gridContainer) return;
+    gridContainer.innerHTML = '';
 
     const missingOrder = [17, 19, 13, 21, 14, 22, 10, 18, 15, 12, 16, 20, 11, 8, 9];
     const missingSet = new Set(missingOrder.slice(0, numMissing));
@@ -710,7 +711,7 @@ function renderExpertDag() {
         const p1 = DAG_NODES[from];
         const p2 = DAG_NODES[to];
         if (p1 && p2) {
-            const path = createCurvedEdgePath(p1, p2, 'svg-edge-dark', 'url(#arrow-dark)');
+            const path = createCurvedEdgePath(p1, p2, from, to, 'svg-edge-dark', 'url(#arrow-dark)');
             svg.appendChild(path);
         }
     });
@@ -742,7 +743,7 @@ function renderLearnedDag(withDifferences) {
         const p1 = DAG_NODES[from];
         const p2 = DAG_NODES[to];
         if (p1 && p2) {
-            const path = createCurvedEdgePath(p1, p2, 'svg-edge-dark', 'url(#arrow-dark-l)');
+            const path = createCurvedEdgePath(p1, p2, from, to, 'svg-edge-dark', 'url(#arrow-dark-l)');
             svg.appendChild(path);
         }
     });
@@ -752,7 +753,7 @@ function renderLearnedDag(withDifferences) {
             const p1 = DAG_NODES[edgeObj.from];
             const p2 = DAG_NODES[edgeObj.to];
             if (p1 && p2) {
-                const path = createCurvedEdgePath(p1, p2, 'svg-edge-red', 'url(#arrow-red-l)');
+                const path = createCurvedEdgePath(p1, p2, edgeObj.from, edgeObj.to, 'svg-edge-red', 'url(#arrow-red-l)');
 
                 path.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -774,7 +775,7 @@ function renderLearnedDag(withDifferences) {
     animateEdgesIn(svg);
 }
 
-function createCurvedEdgePath(p1, p2, className = 'svg-edge-dark', marker = 'url(#arrow-dark)') {
+function createCurvedEdgePath(p1, p2, from, to, className = 'svg-edge-dark', marker = 'url(#arrow-dark)') {
     const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     const dx = p2.x - p1.x;
     const dy = p2.y - p1.y;
