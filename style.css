@@ -443,12 +443,19 @@ body {
 
 .author-name {
     display: inline-block;
-    background: var(--accent);
+    background: #2d2d2d;
     color: #fff;
     font-weight: 700;
     border-radius: 999px;
     padding: 2px 11px;
     margin: 3px 5px 3px 0;
+}
+
+.author-inst {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
 }
 
 .supervisor-name {
@@ -463,6 +470,8 @@ body {
 }
 
 .supervisor-detail {
+    display: block;
+    margin-top: 4px;
     color: var(--text-secondary);
 }
 
