@@ -480,22 +480,6 @@ function initGlobalShortcuts() {
         if (k === 'f') { toggleFocusMode(); e.preventDefault(); return; }
         if (e.key === ' ') { e.preventDefault(); stepPresenter(); return; }
     });
-
-    const presentBtn = document.getElementById('presentBtn');
-    if (presentBtn) {
-        presentBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
-                document.body.classList.add('present-mode');
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-                document.body.classList.remove('present-mode');
-            }
-        });
-    }
-    document.addEventListener('fullscreenchange', () => {
-        if (!document.fullscreenElement) document.body.classList.remove('present-mode');
-    });
 }
 
 // Missing Data Simulation
