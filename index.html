@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <!-- Floating Tooltip -->
+    <!-- Floating SVG Edge Tooltip -->
     <div class="floating-tooltip" id="floatingEdgeTooltip" style="display: none;">
         <div class="tooltip-header">
             <span class="tooltip-edge-title" id="tooltipEdgeTitle">[LC ➔ Amylase]</span>
@@ -33,23 +33,23 @@
                 <span class="logo-text">LungCancer</span>
             </a>
             <nav class="nav-links">
-                <a href="#synthetic-validation" class="nav-link">Data Validation</a>
-                <a href="#demo" class="nav-link">Lab Demo</a>
-                <a href="#missing-sim" class="nav-link">Missing Data</a>
+                <a href="#hero" class="nav-link">Paper</a>
+                <a href="#paper-pdf" class="nav-link">PDF Viewer</a>
+                <a href="#problem-lab" class="nav-link">Problem Statement</a>
+                <a href="#overview-solution" class="nav-link">BN Solution</a>
+                <a href="#synthetic-validation" class="nav-link">Dataset</a>
+                <a href="#imputation-section" class="nav-link">Imputation</a>
                 <a href="#dag-comparison" class="nav-link">DAG Comparison</a>
-                <a href="#overview" class="nav-link">Overview</a>
-                <a href="#configurations" class="nav-link">16 Configs (Table 3)</a>
-                <a href="#extensions" class="nav-link">Colab Extensions</a>
-                <a href="#comparison" class="nav-link">BN vs ML</a>
-                <a href="#clinical" class="nav-link">Clinical Utility</a>
+                <a href="#clinical-results" class="nav-link">Results</a>
+                <a href="#table3-section" class="nav-link">Table 3</a>
+                <a href="#extension-baselines" class="nav-link">Extensions</a>
+                <a href="#arch-hybrid" class="nav-link">Hybrid Arch</a>
+                <a href="#arch-stacking" class="nav-link">Stacking Arch</a>
             </nav>
-            <div class="nav-actions">
-                <a href="#demo" class="nav-action-link">Interactive Case Study ↓</a>
-            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- BLOCK 1: Paper Title & Author Names (Hero Section) -->
     <section class="hero-section" id="hero">
         <div class="container hero-content">
             <div class="badge-pill hero-badge">
@@ -67,13 +67,18 @@
             
             <div class="authors-card">
                 <p class="authors-names">
-                    Henriksen · Van Daalen · Wee · Hansen · Jensen · Brasen · Hilberg · Bermejo
+                    Margrethe Bang Henriksen|
+Lars Henrik Jensen
+|  Florian Van Daalen |  Leonard Wee
+|  Claus Lohman Brasen |  Ole Hilberg
+|  Torben Frøstrup Hansen|  
+|  Inigo Bermejo
                 </p>
                 <div class="publication-meta">
-                    <span class="meta-tag">Cancer Medicine / CCLM · 2025</span>
+                    <span class="meta-tag">Cancer Medicine </span>
                     <span class="meta-tag">Cohort: 9,940 High-Risk Patients</span>
                     <span class="meta-tag">23 Clinical &amp; Lab Attributes</span>
-                    <span class="meta-tag highlight-tag">Paper attached · Colab attached</span>
+                    
                 </div>
             </div>
 
@@ -98,72 +103,71 @@
             </div>
 
             <div class="hero-cta-group">
-                <a href="#demo" class="btn btn-primary btn-lg">
+                <a href="#problem-lab" class="btn btn-primary btn-lg">
                     <span>🔬 Try Interactive Demo</span>
                     <span class="btn-arrow">↓</span>
                 </a>
-                <a href="#dag-comparison" class="btn btn-secondary btn-lg">
-                    <span>⚡ Compare Expert vs Learned DAG</span>
+                <a href="#paper-pdf" class="btn btn-secondary btn-lg">
+                    <span>📄 Read Full PDF Paper</span>
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Synthetic Data Validation -->
-    <section class="section-container bg-light" id="synthetic-validation">
+    <!-- BLOCK 2: Paper PDF Preview & Full Viewer -->
+    <section class="section-container bg-light" id="paper-pdf">
         <div class="container">
             <div class="section-header text-center">
-                <div class="section-badge">🧪 Data Validation</div>
-                <h2 class="section-title">Synthetic Data Validation — Paper vs Colab Reproduction</h2>
-            </div>
-
-            <div class="grid-2">
-                <!-- Paper Table 2 -->
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/table2.jpeg', 'Paper Table 2 — Baseline Characteristics')">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="paper-badge-tag">📄 Paper Table 2</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                    </div>
-                    <div style="background: #ffffff; padding: 8px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: center;">
-                        <img src="images/table2.jpeg" alt="Paper Table 2 — Baseline Characteristics" style="max-width: 100%; height: auto; max-height: 380px; object-fit: contain; border-radius: 4px;" />
-                    </div>
-                </div>
-
-                <!-- Colab Figure 1 -->
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/synthetic_data.jpeg', 'Figure 1 from Colab — Cohort Demographics & Key Lab Distributions')">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                    </div>
-                    <div style="background: #ffffff; padding: 8px; border-radius: 8px; display: flex; justify-content: center;">
-                        <img src="images/synthetic_data.jpeg" alt="Figure 1 from Colab — Demographics &amp; Key Lab Distributions" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 380px; object-fit: contain;" />
-                    </div>
-                </div>
-            </div>
-
-            <p class="text-center" style="margin-top: 18px; font-size: 0.88rem; color: var(--text-secondary);">
-                The synthetic dataset reproduces the cohort demographics and key lab distributions from the original paper.
-            </p>
-        </div>
-    </section>
-
-    <!-- Lab Report Demo -->
-    <section class="section-container" id="demo">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">🔬 Interactive Case Study</div>
-                <h2 class="section-title">Can We Predict Lung Cancer from Routine Blood Tests?</h2>
+                <div class="section-badge">📄 Original Publication</div>
+                <h2 class="section-title">Research Paper PDF Viewer</h2>
                 <p class="section-description">
-                    Patient presenting with suspicious respiratory symptoms in primary care. All 23 clinical attributes from the paper's Table 2 baseline are recorded below.
+                    Inspect the original publication directly. Click anywhere on the preview box below to open the full-screen reader.
                 </p>
             </div>
 
-            <div class="card demo-card">
-                <!-- Patient Banner -->
+            <div class="card pdf-preview-card" style="border: 1.5px solid var(--accent); padding: 18px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700;">📄 "Lung Cancer Detection Using Bayesian Networks"</h3>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Henriksen et al. (2025) · Cancer Medicine / CCLM</span>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary btn-sm" onclick="openPaperPdfModal()">
+                            <span>🔍 Expand Full Paper PDF</span>
+                        </button>
+                        <a href="batch2_final_paper.pdf" target="_blank" class="btn btn-secondary btn-sm">
+                            <span>↗ Open in New Tab</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div style="border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #ffffff; height: 380px; position: relative; cursor: pointer;" onclick="openPaperPdfModal()">
+                    <iframe src="batch2_final_paper.pdf#toolbar=0&navpanes=0&view=FitH" width="100%" height="100%" style="border: none; pointer-events: none;"></iframe>
+                    <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.85)); padding: 22px; text-align: center; color: white;">
+                        <span style="font-weight: 700; font-size: 0.95rem;">🔍 Click to Open Interactive Full-Screen Paper Viewer ↗</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOCK 3: Problem Statement (Fake Lab Report & Missing Data Slider) -->
+    <section class="section-container" id="problem-lab">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">🔬 Problem Statement: Interactive Case Study</div>
+                <h2 class="section-title">Can We Predict Lung Cancer from Routine Blood Tests?</h2>
+                <p class="section-description">
+                    Patient presenting with non-specific symptoms in primary care. Below is the evidence vector containing 23 baseline biomarkers. Drag the slider to simulate missing orders in daily practice.
+                </p>
+            </div>
+
+            <!-- Fake Lab Report Card -->
+            <div class="card demo-card mb-4">
                 <div class="patient-header">
                     <div class="patient-info">
                         <div class="patient-name-row">
-                            <h3 class="patient-id">Patient Case #DK-7842</h3>
+                            <h3 class="patient-id">Patient Case #DK-7842 (Primary Care)</h3>
                             <span class="status-pill warning-pill">Suspected Pulmonary Malignancy</span>
                             <span class="status-pill neutral-pill">72 y/o Male · Current Smoker</span>
                         </div>
@@ -352,123 +356,288 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Missing Data Simulation -->
-    <section class="section-container bg-light" id="missing-sim">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">🧪 Testing Robustness to Missing Data</div>
-                <h2 class="section-title">The Paper Showed BN Models Are Robust Up to 30% Missing Values</h2>
-                <p class="section-description">
-                    Drag the slider to randomly blank out laboratory tests. Missing values appear as <span class="missing-qm">?</span> in red/orange. The risk prediction updates live below the table.
-                </p>
             </div>
 
-            <!-- Imputation Analysis Image (Placed BEFORE Slider Card) -->
-            <div class="card mb-4" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/imputation.jpeg', 'Figure 12: Imputation quality degrades with missingness — the BN needs none (Colab Export)')">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                    <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                    <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click image to expand</span>
-                </div>
-                <div style="background: #ffffff; padding: 10px; border-radius: 8px; display: inline-block; max-width: 100%;">
-                    <img src="images/imputation.jpeg" alt="Figure 12: Imputation quality degrades with missingness" class="colab-img-border" style="max-width: 100%; height: auto; display: block; max-height: 380px;" />
-                </div>
-                <p style="margin-top: 8px; font-size: 0.78rem; color: var(--text-secondary);">
-                    <strong>Figure 12: Imputation Quality Degrades with Missingness — The BN Needs None (Colab Export)</strong>
-                </p>
-            </div>
-
-            <div class="simulation-dashboard">
-                <div class="card slider-card">
-                    <div class="slider-header-row">
-                        <div>
-                            <h3 class="slider-title">Missing Data Percentage</h3>
-                            <p class="slider-hint">Simulates incomplete blood orders in routine primary care practice</p>
-                        </div>
-                        <div class="slider-value-display">
-                            <span class="val-number" id="missingPercentVal">0%</span>
-                            <span class="val-label">Missing Labs</span>
-                        </div>
+            <!-- Missing Data % Slider Card -->
+            <div class="card slider-card" id="missing-sim">
+                <div class="slider-header-row">
+                    <div>
+                        <h3 class="slider-title">Missing Data Percentage Slider</h3>
+                        <p class="slider-hint">Simulates incomplete blood orders in routine primary care practice</p>
                     </div>
-
-                    <div class="range-slider-wrapper">
-                        <input type="range" id="missingDataSlider" min="0" max="30" step="5" value="0" class="custom-slider" />
-                        <div class="slider-steps">
-                            <span class="step-label active" data-step="0">0%</span>
-                            <span class="step-label" data-step="5">5%</span>
-                            <span class="step-label" data-step="10">10%</span>
-                            <span class="step-label" data-step="15">15%</span>
-                            <span class="step-label" data-step="20">20%</span>
-                            <span class="step-label" data-step="25">25%</span>
-                            <span class="step-label" data-step="30">30%</span>
-                        </div>
-                    </div>
-
-                    <div class="simulation-status-banner">
-                        <div class="sim-metric-left">
-                            <span class="sim-metric-label">CURRENT PREDICTED RISK</span>
-                            <div class="sim-metric-val danger-text" id="simRiskValue">74.2%</div>
-                        </div>
-                        <div class="sim-metric-middle">
-                            <div class="stability-badge" id="simStabilityBadge">
-                                <span class="badge-dot"></span>
-                                <span id="simStabilityText">Even with 0% missing data, risk prediction remains stable</span>
-                            </div>
-                            <p class="sim-sub-explanation">
-                                Bayesian networks naturally marginalize over unobserved variables without requiring flawed imputation.
-                            </p>
-                        </div>
-                        <div class="sim-metric-right">
-                            <span class="sim-metric-label">UNRECORDED CELLS</span>
-                            <span class="sim-cells-count" id="missingCellsCount">0 / 23 Attributes</span>
-                        </div>
+                    <div class="slider-value-display">
+                        <span class="val-number" id="missingPercentVal">0%</span>
+                        <span class="val-label">Missing Labs</span>
                     </div>
                 </div>
 
-                <div class="card sim-table-card">
-                    <div class="sim-table-header">
+                <div class="range-slider-wrapper">
+                    <input type="range" id="missingDataSlider" min="0" max="30" step="5" value="0" class="custom-slider" />
+                    <div class="slider-steps">
+                        <span class="step-label active" data-step="0">0%</span>
+                        <span class="step-label" data-step="5">5%</span>
+                        <span class="step-label" data-step="10">10%</span>
+                        <span class="step-label" data-step="15">15%</span>
+                        <span class="step-label" data-step="20">20%</span>
+                        <span class="step-label" data-step="25">25%</span>
+                        <span class="step-label" data-step="30">30%</span>
+                    </div>
+                </div>
+
+                <div class="simulation-status-banner">
+                    <div class="sim-metric-left">
+                        <span class="sim-metric-label">CURRENT PREDICTED RISK</span>
+                        <div class="sim-metric-val danger-text" id="simRiskValue">74.2%</div>
+                    </div>
+                    <div class="sim-metric-middle">
+                        <div class="stability-badge" id="simStabilityBadge">
+                            <span class="badge-dot"></span>
+                            <span id="simStabilityText">Even with 0% missing data, risk prediction remains stable</span>
+                        </div>
+                        <p class="sim-sub-explanation">
+                            Bayesian networks naturally marginalize over unobserved variables without requiring flawed imputation.
+                        </p>
+                    </div>
+                    <div class="sim-metric-right">
+                        <span class="sim-metric-label">UNRECORDED CELLS</span>
+                        <span class="sim-cells-count" id="missingCellsCount">0 / 23 Attributes</span>
+                    </div>
+                </div>
+
+                <div class="sim-table-card mt-3">
+                    <div class="sim-table-header mb-2">
                         <span class="table-tag">Patient Evidence Vector (Real-Time State)</span>
                         <span class="table-legend-text">Cells marked <span class="missing-qm-pill">?</span> are marginalized out in real-time</span>
                     </div>
-
                     <div class="compact-grid-wrapper" id="simCompactGrid">
                         <!-- Populated dynamically -->
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 
-    <!-- Interactive DAG Comparison -->
+    <!-- BLOCK 4: Problem Statement (description) (brief) & solution (from paper) (about BN) -->
+    <section class="section-container bg-light" id="overview-solution">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">📄 Problem Statement &amp; Solution</div>
+                <h2 class="section-title">Why Bayesian Networks for Primary Care Triage?</h2>
+                <p class="section-description">
+                    Early detection of lung cancer in primary care is challenged by non-specific symptoms and incomplete laboratory workups. Bayesian Networks provide an interpretable, probabilistic solution that naturally handles missing data.
+                </p>
+            </div>
+
+            <div class="grid-2 mb-4">
+                <div class="card overview-card">
+                    <div class="card-icon-header">
+                        <div>
+                            <h3 class="card-heading">The Problem in Primary Care</h3>
+                            <span class="subheading-tag">Non-specific symptoms &amp; incomplete labs</span>
+                        </div>
+                    </div>
+                    <ul class="clean-check-list">
+                        <li>
+                            <span class="list-check text-danger">⚠️</span>
+                            <div><strong>Vague clinical presentation:</strong> Early lung cancer presents with non-specific cough, fatigue, or minor weight loss.</div>
+                        </li>
+                        <li>
+                            <span class="list-check text-danger">⚠️</span>
+                            <div><strong>Incomplete blood orders:</strong> Primary care clinicians rarely order all 20 blood tests simultaneously.</div>
+                        </li>
+                        <li>
+                            <span class="list-check text-danger">⚠️</span>
+                            <div><strong>Black-box ML failures:</strong> Standard machine learning models crash or require synthetic data imputation when labs are missing.</div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card overview-card">
+                    <div class="card-icon-header">
+                        <div>
+                            <h3 class="card-heading">The Solution: Bayesian Networks</h3>
+                            <span class="subheading-tag">Probabilistic graphical modeling (Henriksen et al.)</span>
+                        </div>
+                    </div>
+                    <ul class="clean-check-list">
+                        <li>
+                            <span class="list-check">✓</span>
+                            <div><strong>Exact probabilistic marginalization:</strong> BNs integrate over missing predictors without imputing fake values.</div>
+                        </li>
+                        <li>
+                            <span class="list-check">✓</span>
+                            <div><strong>Transparent medical causality:</strong> Explicit DAG graphs allow clinicians to inspect conditional dependencies.</div>
+                        </li>
+                        <li>
+                            <span class="list-check">✓</span>
+                            <div><strong>High diagnostic discrimination:</strong> Reaches AUC 0.757 in paper and up to 0.886 in extended pipeline.</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Architecture I: Canvas Diagram 1 ("Bayesian Network — Full Pipeline") -->
+            <figure class="diagram-figure card" id="fig1" style="padding: 20px;">
+                <p class="fig-eyebrow">Architecture I</p>
+                <h2 class="fig-title">Bayesian Network — Full Pipeline Architecture</h2>
+                <p class="fig-sub">From raw patient records to a calibrated per-patient risk score, via dual discretization and dual structure-learning strategies.</p>
+                <div class="canvas-card">
+                    <canvas id="canvas1"></canvas>
+                    <div class="legend" id="legend1"></div>
+                </div>
+                <figcaption style="max-width: 100%; margin-top: 18px;">
+                    <p style="margin-bottom: 8px;"><b>Architecture I Full Description:</b></p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>1. Patient Cohort (Data Input):</strong> 9,940 patient records containing demographics (Age, Sex, Smoker) and 20 blood biomarkers along with binary Lung Cancer (LC) diagnostic labels.
+                    </p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>2. MCAR Missing-Data Injection:</strong> Evaluated at 0%, 10%, 20%, and 30% missingness levels to test real-world primary care lab ordering incompleteness.
+                    </p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>3. Dual Discretization Strategies:</strong> Continuous biomarkers are discretized via (A) <i>Clinical Reference Ranges</i> (low, normal, high) or (B) <i>MDLP Binning</i> (Fayyad–Irani entropy splitting).
+                    </p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>4. Dual Structure Learning:</strong> Graphs are constructed via (A) <i>Expert-Elicited DAG</i> (38 causal arcs designed by clinicians) or (B) <i>Data-Learned DAG</i> (K2 hill-climbing score search).
+                    </p>
+                    <p>
+                        <strong>5. Available-Case MLE &amp; Variable Elimination:</strong> Conditional Probability Tables (CPTs) are fit using available-case maximum likelihood with Laplace smoothing ($\alpha=1$). Exact marginal inference $P(\text{LC}=1 \mid E_{\text{obs}})$ is calculated without requiring data imputation.
+                    </p>
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- BLOCK 5: Dataset in Paper (details) & About Synthetic Dataset (similarity proof) -->
+    <section class="section-container" id="synthetic-validation">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">🧪 Dataset Details &amp; Validation</div>
+                <h2 class="section-title">Dataset in Paper &amp; Synthetic Reproduction Proof</h2>
+                <p class="section-description">
+                    The paper analyzes 9,940 high-risk patients from Southern Denmark (2009–2018). Side-by-side visual comparison proves the Colab synthetic dataset reproduces the exact cohort demographics and lab distributions.
+                </p>
+            </div>
+
+            <div class="grid-2 mb-3">
+                <!-- Paper Table 2 -->
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/table2.jpeg', 'Paper Table 2 — Baseline Characteristics')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="paper-badge-tag">📄 Paper Table 2 (Baseline Characteristics)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 8px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: center;">
+                        <img src="images/table2.jpeg" alt="Paper Table 2 — Baseline Characteristics" style="max-width: 100%; height: auto; max-height: 380px; object-fit: contain; border-radius: 4px;" />
+                    </div>
+                </div>
+
+                <!-- Colab Figure 1 -->
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/synthetic_data.jpeg', 'Figure 1 from Colab — Cohort Demographics & Key Lab Distributions')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 8px; border-radius: 8px; display: flex; justify-content: center;">
+                        <img src="images/synthetic_data.jpeg" alt="Figure 1 from Colab — Demographics &amp; Key Lab Distributions" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 380px; object-fit: contain;" />
+                    </div>
+                </div>
+            </div>
+
+            <p class="text-center" style="font-size: 0.88rem; color: var(--text-secondary);">
+                <strong>Similarity Proof:</strong> The synthetic dataset reproduces the cohort demographics and key lab distributions from the original paper.
+            </p>
+        </div>
+    </section>
+
+    <!-- BLOCK 6: About Imputation (proof then BN works well) (Side-by-Side Chart.js + Original) -->
+    <section class="section-container bg-light" id="imputation-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">🧪 Imputation Analysis</div>
+                <h2 class="section-title">About Imputation — Proof That BN Works Natively Without Flawed Assumptions</h2>
+                <p class="section-description">
+                    Standard ML imputation degrades rapidly under missingness. The Bayesian Network bypasses synthetic imputation entirely through exact variable elimination.
+                </p>
+            </div>
+
+            <!-- Imputation Side-by-Side Grid: Chart.js Line Chart + Original Figure 12 -->
+            <div class="grid-2 mb-4">
+                <div class="card chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <h3 class="chart-heading">Figure 12: Chart.js Imputation Loss vs Missingness</h3>
+                            <span class="chart-subheading">Imputation Error (MAE) for Mean, KNN, MICE vs Native BN (0 Loss)</span>
+                        </div>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                    </div>
+                    <div class="chart-canvas-wrapper" style="height: 280px;">
+                        <canvas id="imputationChart"></canvas>
+                    </div>
+                    <div class="chart-footer-note mt-2">
+                        <span>💡 Bayesian Networks suffer zero imputation loss because unobserved variables are marginalized out exactly.</span>
+                    </div>
+                </div>
+
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/imputation.jpeg', 'Figure 12: Imputation quality degrades with missingness — the BN needs none (Colab Export)')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click image to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
+                        <img src="images/imputation.jpeg" alt="Figure 12: Imputation quality degrades with missingness" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
+                        <strong>Figure 12: Imputation Quality Degrades with Missingness (Original Colab Export)</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card bn-advantages-banner">
+                <h3 class="advantages-title">Why Bayesian Networks Perform Consistently Well Under Missing Data</h3>
+                <div class="advantages-grid">
+                    <div class="advantage-col">
+                        <h4>No Data Fabrication</h4>
+                        <p>Imputation invents artificial mean or median values that distort real joint probability distributions.</p>
+                    </div>
+                    <div class="advantage-col">
+                        <h4>Exact Marginalization</h4>
+                        <p>BNs compute exact marginal probabilities $P(\text{LC}=1 \mid E_{\text{obs}})$ over whatever evidence vector is available.</p>
+                    </div>
+                    <div class="advantage-col">
+                        <h4>Fidelity up to 30%</h4>
+                        <p>Empirical proof shows BN discriminative power remains stable even when up to 30% of blood orders are missing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOCK 7: Expert DAG vs Learned DAG -->
     <section class="section-container dag-comparison-section" id="dag-comparison">
         <div class="container">
             <div class="section-header text-center">
                 <div class="section-badge">⚡ DIRECTED ACYCLIC GRAPHS</div>
-                <h2 class="section-title">Interactive DAG Comparison: Expert vs. Learned</h2>
+                <h2 class="section-title">Expert DAG vs. Learned DAG Structure</h2>
                 <p class="section-description">
-                    Split-screen comparison of the expert-curated DAG against the data-driven learned structure. Toggle "Show Differences" to reveal removed connections in RED and click any red edge for a floating explanation.
+                    Side-by-side comparison of the original Colab Matplotlib export alongside an interactive SVG DAG comparison. Toggle "Show Differences" to reveal pruned connections in RED.
                 </p>
             </div>
 
             <!-- Original Colab DAG Image -->
             <div class="card original-dag-card mb-4" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/dag_proof.jpeg', 'Figure 2: Expert vs Learned DAG Structure (Original Colab Export)')">
                 <div class="original-dag-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                    <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
+                    <span class="colab-text-note">Colab Extension (Not in paper)</span>
                     <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click image to expand</span>
                 </div>
                 <div style="background: #ffffff; padding: 10px; border-radius: 8px; display: inline-block; max-width: 100%;">
                     <img src="images/dag_proof.jpeg" alt="Figure 2: Expert vs Learned DAG Structure" class="colab-img-border" style="max-width: 100%; height: auto; display: block;" />
                 </div>
                 <p style="margin-top: 8px; font-size: 0.78rem; color: var(--text-secondary);">
-                    <strong>Figure 2: Expert vs Learned DAG Structure</strong> — Original Matplotlib export directly from Colab reproduction pipeline. Click image to zoom.
+                    <strong>Figure 2: Expert vs Learned DAG Structure (Original Colab Export)</strong>
                 </p>
             </div>
 
-            <!-- DAG Split Grid -->
+            <!-- DAG Split Grid (SVG Generated) -->
             <div class="dag-split-grid">
                 <!-- Expert DAG -->
                 <div class="card dag-card">
@@ -487,9 +656,8 @@
                     </div>
 
                     <div class="dag-legend">
-                        <span class="legend-item"><span class="legend-line dark-line"></span> Expert Directed Connection</span>
-                        <span class="legend-item"><span class="legend-dot red-dot"></span> Target Node: LC (Red)</span>
-                        <span class="legend-item"><span class="legend-dot dark-dot"></span> Connected Nodes</span>
+                        <span class="legend-item"><span class="legend-line dark-line"></span> Expert Connection</span>
+                        <span class="legend-item"><span class="legend-dot red-dot"></span> Target Node: LC</span>
                     </div>
                 </div>
 
@@ -513,127 +681,34 @@
                         <button class="btn btn-primary btn-sm btn-full-width" id="btnToggleDagDiff">
                             <span id="btnToggleDagDiffText">Show Differences (18 Removed Edges in Red)</span>
                         </button>
-                        <span class="dag-hint-text">Click any <strong class="text-danger">RED edge</strong> to open a floating explanation</span>
                     </div>
 
                     <div class="dag-legend">
                         <span class="legend-item"><span class="legend-line dark-line"></span> Learned Connection</span>
                         <span class="legend-item"><span class="legend-line red-line"></span> Removed Connection</span>
-                        <span class="legend-item"><span class="legend-dot red-dot"></span> Target Node: LC (Red)</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Paper Overview -->
-    <section class="section-container bg-light" id="overview">
+    <!-- BLOCK 8: Clinical vs Data-Driven Results -->
+    <section class="section-container bg-light" id="clinical-results">
         <div class="container">
             <div class="section-header text-center">
-                <div class="section-badge">📄 The Paper: Overview</div>
-                <h2 class="section-title">Bayesian Networks for Lung Cancer Detection</h2>
+                <div class="section-badge">📊 Model Evaluation</div>
+                <h2 class="section-title">Clinical vs. Data-Driven Results</h2>
                 <p class="section-description">
-                    A retrospective study on 9,940 patients from Southern Denmark (2009–2018), comparing Bayesian Network models against machine learning for early lung cancer triage in primary care.
+                    Comprehensive benchmarks across 16 configurations, missing data degradation, probability distributions, and prediction correlation.
                 </p>
             </div>
 
-            <div class="grid-2">
-                <div class="card overview-card">
-                    <div class="card-icon-header">
-                        <div>
-                            <h3 class="card-heading">Study Design Summary</h3>
-                            <span class="subheading-tag">Southern Denmark Cohort (2009–2018)</span>
-                        </div>
-                    </div>
-                    <ul class="clean-check-list">
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>9,940 patients from Southern Denmark (2009–2018):</strong> Comprehensive real-world primary care cohort.</div>
-                        </li>
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>High-risk population:</strong> Patients referred by general practitioners with suspected lung cancer.</div>
-                        </li>
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>23 clinical and laboratory features:</strong> Demographics, smoking status, and 20 routine blood biomarkers.</div>
-                        </li>
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>Bayesian Networks vs. DES (ML) comparison:</strong> Head-to-head evaluation against Discriminative Ensemble Selection.</div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="card overview-card">
-                    <div class="card-icon-header">
-                        <div>
-                            <h3 class="card-heading">Key Findings</h3>
-                            <span class="subheading-tag">Empirical Results from Henriksen et al.</span>
-                        </div>
-                    </div>
-                    <ul class="clean-check-list">
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>BN models robust to 30% missing data:</strong> Maintained stable discrimination across missing levels.</div>
-                        </li>
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>AUC: 0.737–0.757:</strong> Strong diagnostic discrimination matching complex ensemble ML algorithms.</div>
-                        </li>
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>Clinical utility above 5% risk:</strong> Decision curve analysis demonstrated clear net benefit.</div>
-                        </li>
-                        <li>
-                            <span class="list-check">✓</span>
-                            <div><strong>Interpretable decision-making:</strong> Transparent probabilistic graph allows clinician auditing.</div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 16 Configurations & Paper Table 3 -->
-    <section class="section-container" id="configurations">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">🧪 Your Extension: All 16 Configurations &amp; Paper Table 3</div>
-                <h2 class="section-title">Side-by-Side Comparison: Interactive Model vs. Paper Table 3</h2>
-                <p class="section-description">
-                    Head-to-head evaluation across 4 missingness levels (0%, 10%, 20%, 30%), 2 DAG structures (Expert vs Learned), and 2 discretization methods (Clinical vs Data-Driven).
-                </p>
-            </div>
-
-            <div class="metric-highlight-grid">
-                <div class="metric-card">
-                    <span class="metric-label">Best AUC</span>
-                    <div class="metric-number-big" id="metricBestAUC">0.886</div>
-                    <span class="metric-sub">DataDriven / Learned (0% Miss)</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-label">Best TPR @ 95% Specificity</span>
-                    <div class="metric-number-big" id="metricBestTPR">0.547</div>
-                    <span class="metric-sub">54.7% Sensitivity at 5% FPR</span>
-                </div>
-                <div class="metric-card">
-                    <span class="metric-label">Average AUC</span>
-                    <div class="metric-number-big" id="metricAvgAUC">0.835</div>
-                    <span class="metric-sub">Across All 16 Configurations</span>
-                </div>
-                <div class="metric-card highlight-metric-card">
-                    <span class="metric-label">Paper AUC vs Your Best</span>
-                    <div class="metric-number-big">+17.2%</div>
-                    <span class="metric-sub">Paper: 0.756 ➔ Your Best: 0.886</span>
-                </div>
-            </div>
-
-            <div class="grid-2">
+            <!-- 16 Configs Side-by-Side: Chart.js Bar Chart + Original auc_16.jpeg -->
+            <div class="grid-2 mb-4">
                 <div class="card chart-main-card">
                     <div class="chart-header-bar">
                         <div>
-                            <h3 class="card-title-main">Interactive 16-Config Performance</h3>
+                            <h3 class="card-title-main">Interactive 16-Config AUC Performance</h3>
                             <p class="card-subtitle-main">Chart.js dynamic benchmark view</p>
                         </div>
                         <div class="toggle-button-group" id="aucToggleGroup">
@@ -646,245 +721,23 @@
                     <div class="chart-canvas-wrapper" style="height: 310px;">
                         <canvas id="allConfigsChart"></canvas>
                     </div>
-
-                    <div class="comparison-banner-box" style="margin-top: 10px; padding: 6px 12px;">
-                        <span class="comp-label">Paper Baseline:</span>
-                        <span class="comp-val">0.756</span>
-                        <span class="comp-divider">|</span>
-                        <span class="comp-label">Your Best:</span>
-                        <span class="comp-val">0.886</span>
-                    </div>
                 </div>
 
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/table3.jpeg', 'Paper Table 3 — Bayesian Network Model Performance & Discretization Comparison')">
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/auc_16.jpeg', 'Original 16 Configuration AUC Evaluation Grid (Colab Export)')">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="paper-badge-tag">📄 Paper Table 3 (Original Benchmark)</span>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
                         <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
                     </div>
-                    <div style="background: #ffffff; padding: 8px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: center; min-height: 310px; align-items: center;">
-                        <img src="images/table3.jpeg" alt="Paper Table 3 — Bayesian Network Model Performance" style="max-width: 100%; height: auto; max-height: 330px; object-fit: contain; border-radius: 4px;" />
-                    </div>
-                    <p style="margin-top: 8px; font-size: 0.76rem; color: var(--text-secondary);">
-                        <strong>Paper Table 3 Summary</strong>: Evaluates performance across discretization modes (EFD/EWD vs Expert) and missing data (0%–30%).
-                    </p>
-                </div>
-            </div>
-
-            <div class="card mt-4" style="cursor: pointer;" onclick="openImageModal('images/auc_16.jpeg', 'Figure: 16 Configuration AUC Evaluation Grid (Colab Export)')">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                    <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                    <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                </div>
-                <div style="background: #ffffff; padding: 10px; border-radius: 8px; text-align: center;">
-                    <img src="images/auc_16.jpeg" alt="16 Configuration AUC Evaluation Grid" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 380px; display: inline-block;" />
-                </div>
-                <p style="margin-top: 8px; font-size: 0.78rem; color: var(--text-secondary); text-align: center;">
-                    <strong>Colab 16-Config Grid</strong>: Full factorial evaluation of all 16 model pipelines executed in the Python environment.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Colab Research Extensions -->
-    <section class="section-container bg-light" id="extensions">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">🚀 Colab Research Extensions</div>
-                <h2 class="section-title">Colab Research Extensions — Advanced Line Chart Comparisons</h2>
-                <p class="section-description">
-                    Side-by-side comparison of interactive Chart.js line graphs matching the exact format and values of original Colab figure exports. <strong class="text-danger">(This is from Colab — Not in paper)</strong>.
-                </p>
-            </div>
-
-            <!-- ROW 1: Figure 11: BN vs ML (bn_vs_ml.jpeg) with TWO Subplots (AUC & TPR @ 95%) -->
-            <div class="grid-2 mb-4">
-                <div class="card chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <h3 class="chart-heading">Figure 11: Interactive Subplots (a &amp; b)</h3>
-                            <span class="chart-subheading">(a) AUC vs missingness &amp; (b) TPR @ fixed TNR=95%</span>
-                        </div>
-                        <span class="badge-pill-mini">Strict B&amp;W Theme</span>
-                    </div>
-
-                    <!-- Subplot (a) AUC -->
-                    <div style="margin-bottom: 12px;">
-                        <h4 style="font-size: 0.76rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">(a) AUC vs. missingness</h4>
-                        <div class="chart-canvas-wrapper" style="height: 180px;">
-                            <canvas id="bnVsMlChart"></canvas>
-                        </div>
-                    </div>
-
-                    <!-- Subplot (b) TPR @ TNR=95% -->
-                    <div>
-                        <h4 style="font-size: 0.76rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">(b) TPR @ fixed TNR=95% vs. missingness</h4>
-                        <div class="chart-canvas-wrapper" style="height: 180px;">
-                            <canvas id="bnVsMlTprChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-footer-note mt-2">
-                        <span>💡 Both subplots rendered in strict black &amp; white monochrome theme.</span>
-                    </div>
-                </div>
-
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/bn_vs_ml.jpeg', 'Figure 11: Bayesian Network vs. Random Forest / XGBoost (Colab Export)')">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                    </div>
-                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 400px;">
-                        <img src="images/bn_vs_ml.jpeg" alt="Figure 11: Bayesian Network vs. Random Forest / XGBoost" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 390px; object-fit: contain;" />
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 310px;">
+                        <img src="images/auc_16.jpeg" alt="Original 16 Configuration AUC Evaluation Grid" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 310px; object-fit: contain;" />
                     </div>
                     <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
-                        <strong>Figure 11: Bayesian Network vs. Random Forest / XGBoost (mean-imputed)</strong>
+                        <strong>Original 16 Configuration AUC Evaluation Grid (Colab Export)</strong>
                     </p>
                 </div>
             </div>
 
-            <!-- ROW 2: Figure 13: Real-data validation (bn_vs_imputed_ml.jpeg) -->
-            <div class="grid-2 mb-4">
-                <div class="card chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <h3 class="chart-heading">Figure 13: Real-Data Validation Line Chart</h3>
-                            <span class="chart-subheading">AUC vs. % missing values (Synthetically injected into real data)</span>
-                        </div>
-                        <span class="badge-pill-mini">Strict B&amp;W Theme</span>
-                    </div>
-                    <div class="chart-canvas-wrapper" style="height: 280px;">
-                        <canvas id="bnVsImputedMlChart"></canvas>
-                    </div>
-                    <div class="chart-footer-note">
-                        <span>💡 Black &amp; White monochrome lines: Solid=RF, Dashed=BN, Dotted=XGBoost.</span>
-                    </div>
-                </div>
-
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/bn_vs_imputed_ml.jpeg', 'Figure 13: Real-data validation — BN vs. mean-imputed ML (Colab Export)')">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                    </div>
-                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
-                        <img src="images/bn_vs_imputed_ml.jpeg" alt="Figure 13: Real-data validation — BN vs. mean-imputed ML" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
-                    </div>
-                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
-                        <strong>Figure 13: Real-data validation — BN vs. mean-imputed ML</strong>
-                    </p>
-                </div>
-            </div>
-
-            <!-- ROW 3: Figure 13: External validation on NLST-780 (bn_vs_ml_nlst.jpeg) -->
-            <div class="grid-2 mb-4">
-                <div class="card chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <h3 class="chart-heading">Figure 13: External NLST Validation Line Chart</h3>
-                            <span class="chart-subheading">AUC vs. % missing values (Synthetically injected into NLST predictors)</span>
-                        </div>
-                        <span class="badge-pill-mini">Strict B&amp;W Theme</span>
-                    </div>
-                    <div class="chart-canvas-wrapper" style="height: 280px;">
-                        <canvas id="nlstValidationChart"></canvas>
-                    </div>
-                    <div class="chart-footer-note">
-                        <span>💡 Black &amp; White monochrome lines: Solid=RF, Dashed=XGBoost, Dotted=BN.</span>
-                    </div>
-                </div>
-
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/bn_vs_ml_nlst.jpeg', 'Figure 13: External validation on NLST-780 (Colab Export)')">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                    </div>
-                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
-                        <img src="images/bn_vs_ml_nlst.jpeg" alt="Figure 13: External validation on NLST-780" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
-                    </div>
-                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
-                        <strong>Figure 13: External validation on NLST-780</strong>
-                    </p>
-                </div>
-            </div>
-
-            <!-- ROW 4: Figure 14: Hybrid BN + DL (hybrid_bn_dl.jpeg) -->
-            <div class="grid-2 mb-4">
-                <div class="card chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <h3 class="chart-heading">Figure 14: Hybrid BN + Deep Learning Line Chart</h3>
-                            <span class="chart-subheading">AUC vs. % missing values across model architectures</span>
-                        </div>
-                        <span class="badge-pill-mini">Strict B&amp;W Theme</span>
-                    </div>
-                    <div class="chart-canvas-wrapper" style="height: 280px;">
-                        <canvas id="hybridBnDlChart"></canvas>
-                    </div>
-                    <div class="chart-footer-note">
-                        <span>💡 Black &amp; White monochrome lines with distinct marker symbols (Circle, Square, Triangle, RectRot, Star).</span>
-                    </div>
-                </div>
-
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/hybrid_bn_dl.jpeg', 'Figure 14: Hybrid Bayesian Network + Deep Learning (Colab Export)')">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                    </div>
-                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
-                        <img src="images/hybrid_bn_dl.jpeg" alt="Figure 14: Hybrid Bayesian Network + Deep Learning" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
-                    </div>
-                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
-                        <strong>Figure 14: Hybrid Bayesian Network + Deep Learning</strong>
-                    </p>
-                </div>
-            </div>
-
-            <!-- ROW 5: Figure 14: Bayesian Network-Hybrid Models on NLST (final_stacking_model.jpeg) -->
-            <div class="grid-2 mb-4">
-                <div class="card chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <h3 class="chart-heading">Figure 14: BN-Hybrid Models on NLST Line Chart</h3>
-                            <span class="chart-subheading">AUC vs. % Missing Values across 7 hybrid ensemble models</span>
-                        </div>
-                        <span class="badge-pill-mini">Strict B&amp;W Theme</span>
-                    </div>
-                    <div class="chart-canvas-wrapper" style="height: 280px;">
-                        <canvas id="stackingModelChart"></canvas>
-                    </div>
-                    <div class="chart-footer-note">
-                        <span>💡 Black &amp; White monochrome lines with 7 distinct line dash/point patterns.</span>
-                    </div>
-                </div>
-
-                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/final_stacking_model.jpeg', 'Figure 14: Bayesian Network–Hybrid Models on NLST (Colab Export)')">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
-                    </div>
-                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
-                        <img src="images/final_stacking_model.jpeg" alt="Figure 14: Bayesian Network–Hybrid Models on NLST" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
-                    </div>
-                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
-                        <strong>Figure 14: Bayesian Network–Hybrid Models on NLST</strong>
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Interactive & Colab Figures Gallery -->
-    <section class="section-container" id="results">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">📊 Interactive &amp; Colab Figures</div>
-                <h2 class="section-title">Visualizing Model Performance: Interactive vs. Colab Exports</h2>
-                <p class="section-description">
-                    Side-by-side display of interactive Chart.js visualizations alongside raw figure exports generated during Colab execution.
-                </p>
-            </div>
-
-            <!-- ROW 1: Figure 5: AUC Degradation & Sensitivity Subplots vs Original Colab auc_degradation.jpeg -->
+            <!-- Figure 5: AUC Degradation & Sensitivity Subplots vs Original Colab auc_degradation.jpeg -->
             <div class="grid-2 mb-4">
                 <div class="card chart-card">
                     <div class="chart-card-header">
@@ -892,10 +745,9 @@
                             <h3 class="chart-heading">Figure 5: Interactive Subplots (a &amp; b)</h3>
                             <span class="chart-subheading">(a) AUC Degradation &amp; (b) Sensitivity at 95% Specificity</span>
                         </div>
-                        <span class="badge-pill-mini">Strict B&amp;W Theme</span>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
                     </div>
 
-                    <!-- Subplot (a) AUC Degradation -->
                     <div style="margin-bottom: 12px;">
                         <h4 style="font-size: 0.76rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">(a) AUC Degradation</h4>
                         <div class="chart-canvas-wrapper" style="height: 180px;">
@@ -903,34 +755,29 @@
                         </div>
                     </div>
 
-                    <!-- Subplot (b) Sensitivity at 95% Specificity -->
                     <div>
                         <h4 style="font-size: 0.76rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">(b) Sensitivity at 95% Specificity (TPR @ TNR=0.95)</h4>
                         <div class="chart-canvas-wrapper" style="height: 180px;">
                             <canvas id="degradationTprChart"></canvas>
                         </div>
                     </div>
-
-                    <div class="chart-footer-note mt-2">
-                        <span>💡 Both subplots rendered in strict black &amp; white monochrome theme.</span>
-                    </div>
                 </div>
 
                 <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/auc_degradation.jpeg', 'Figure 5: Missing Data Resilience — (a) AUC Degradation & (b) Sensitivity at 95% Specificity (Colab Export)')">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
                         <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
                     </div>
                     <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 400px;">
                         <img src="images/auc_degradation.jpeg" alt="Figure 5: Missing Data Resilience" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 390px; object-fit: contain;" />
                     </div>
                     <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
-                        <strong>Figure 5: Missing Data Resilience (Original Colab Export)</strong> — (a) AUC Degradation &amp; (b) Sensitivity at 95% Specificity.
+                        <strong>Figure 5: Missing Data Resilience (Original Colab Export)</strong>
                     </p>
                 </div>
             </div>
 
-            <!-- ROW 2: Figure 8: 4 Subplots of P(LC=1) Distributions vs distributions.jpeg -->
+            <!-- Figure 8: 4 Subplots of P(LC=1) Distributions vs distributions.jpeg -->
             <div class="grid-2 mb-4">
                 <div class="card chart-card">
                     <div class="chart-card-header">
@@ -938,10 +785,9 @@
                             <h3 class="chart-heading">Figure 8: Interactive P(LC=1) Subplots (4 Cases)</h3>
                             <span class="chart-subheading">Density distributions across 4 Discretization / DAG combinations</span>
                         </div>
-                        <span class="badge-pill-mini">Strict B&amp;W Theme</span>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
                     </div>
 
-                    <!-- 2x2 Grid for 4 Subplots -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
                         <div>
                             <h4 style="font-size: 0.68rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 2px;">Clinical / Expert (AUC=0.728)</h4>
@@ -968,15 +814,11 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="chart-footer-note mt-2">
-                        <span>💡 4 subplots matching Figure 8: Non-LC (n=7,435) vs LC (n=2,505) density curves.</span>
-                    </div>
                 </div>
 
                 <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/distributions.jpeg', 'Figure 8: P(LC=1) Distributions — 0% Missing (Colab Export)')">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                        <span class="colab-extension-badge">⚡ Colab Extension (Not in paper)</span>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
                         <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
                     </div>
                     <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 340px;">
@@ -988,188 +830,334 @@
                 </div>
             </div>
 
-            <!-- ROW 3: ROC Curve -->
-            <div class="card chart-card mb-4">
-                <div class="chart-card-header">
-                    <div>
-                        <h3 class="chart-heading">Interactive ROC Discrimination Curve</h3>
-                        <span class="chart-subheading">True Positive Rate vs. False Positive Rate across model pipelines</span>
-                    </div>
-                    <span class="badge-pill-mini">Best AUC 0.886</span>
-                </div>
-                <div class="chart-canvas-wrapper" style="height: 280px;">
-                    <canvas id="rocChart"></canvas>
-                </div>
-                <div class="chart-footer-note">
-                    <span>💡 At 95% specificity (5% FPR), DataDriven/Learned model achieves <strong>54.7% sensitivity</strong>.</span>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- BN vs ML Comparison -->
-    <section class="section-container" id="comparison">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">⚖️ BN vs. Machine Learning</div>
-                <h2 class="section-title">Bayesian Networks vs. Discriminative Ensemble Selection</h2>
-                <p class="section-description">
-                    BN: 0.756 | DES: 0.770 &mdash; Comparable discriminative accuracy, but Bayesian Networks provide critical interpretability and handle missing data natively.
-                </p>
-            </div>
-
-            <div class="head-to-head-grid">
-                <div class="card h2h-card">
-                    <div class="h2h-header">
-                        <span class="h2h-pill">Bayesian Network (BN)</span>
-                        <div class="h2h-score font-mono">0.756 <span class="h2h-sub-score">(0.886 Your Best)</span></div>
-                        <span class="h2h-score-label">AUC-ROC Performance</span>
-                    </div>
-                    <ul class="h2h-feature-list">
-                        <li>
-                            <span class="h2h-icon">✓</span>
-                            <div><strong>Interpretable:</strong> Explicit directed acyclic graph maps clear medical causality and conditional independence.</div>
-                        </li>
-                        <li>
-                            <span class="h2h-icon">✓</span>
-                            <div><strong>Handles Missing Data:</strong> Exact sum-product variable elimination without synthetic imputation.</div>
-                        </li>
-                        <li>
-                            <span class="h2h-icon">✓</span>
-                            <div><strong>Clinical Utility:</strong> Net benefit threshold &gt;5% for early primary care screening.</div>
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="card h2h-card">
-                    <div class="h2h-header">
-                        <span class="h2h-pill neutral-pill">DES (Machine Learning)</span>
-                        <div class="h2h-score font-mono">0.770</div>
-                        <span class="h2h-score-label">AUC-ROC Performance</span>
-                    </div>
-                    <ul class="h2h-feature-list">
-                        <li>
-                            <span class="h2h-icon text-muted">✗</span>
-                            <div><strong>Black Box:</strong> Complex ensemble lacks transparent probabilistic reasoning for clinicians.</div>
-                        </li>
-                        <li>
-                            <span class="h2h-icon text-muted">✗</span>
-                            <div><strong>Requires Imputation:</strong> Must impute missing values with synthetic assumptions.</div>
-                        </li>
-                        <li>
-                            <span class="h2h-icon text-muted">~</span>
-                            <div><strong>Comparable Performance:</strong> Only +0.014 difference in original paper, surpassed by your best BN (0.886).</div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="card bn-advantages-banner mt-4">
-                <h3 class="advantages-title">Key BN Advantages in Clinical Deployment</h3>
-                <div class="advantages-grid">
-                    <div class="advantage-col">
-                        <h4>Interpretable</h4>
-                        <p>Clinicians inspect exact conditional probability tables rather than opaque neural weight matrices.</p>
-                    </div>
-                    <div class="advantage-col">
-                        <h4>Handles Missing Data</h4>
-                        <p>No synthetic data fabrication. Marginal probability calculates over whatever tests the clinic ran.</p>
-                    </div>
-                    <div class="advantage-col">
-                        <h4>Clinical Utility</h4>
-                        <p>Lower threshold for clinical utility (&gt;5%), ideal for early primary care triage.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- Clinical Utility -->
-    <section class="section-container bg-light" id="clinical">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">💊 Clinical Utility</div>
-                <h2 class="section-title">Decision Curve Analysis &amp; Screening Thresholds</h2>
-                <p class="section-description">
-                    Net benefit threshold &gt;5% for BN vs. &gt;7% for DES. BNs have a lower threshold for clinical utility, identifying high-risk patients earlier.
-                </p>
-            </div>
-
-            <div class="grid-2">
-                <div class="card utility-card">
-                    <div class="card-icon-header">
+            <!-- Figure 10: 16x16 Prediction Correlation Matrix Side-by-Side -->
+            <div class="grid-2 mb-4">
+                <div class="card chart-card">
+                    <div class="chart-card-header">
                         <div>
-                            <h3 class="card-heading">Net Benefit Thresholds</h3>
-                            <span class="subheading-tag">Decision Curve Analysis (DCA)</span>
+                            <h3 class="chart-heading">Figure 10: Interactive 16×16 Prediction Correlation Matrix</h3>
+                            <span class="chart-subheading">Mean correlation across 16 model prediction vectors</span>
                         </div>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
                     </div>
-
-                    <div class="net-benefit-display">
-                        <div class="threshold-badge-big">
-                            <span class="thresh-num">&gt; 5%</span>
-                            <span class="thresh-sub">BN Net Benefit Threshold</span>
-                        </div>
-                        <div class="threshold-vs-box">
-                            <div class="thresh-comp-row">
-                                <span class="badge-status">BN Net Benefit</span>
-                                <strong>&gt; 5% Risk Threshold</strong>
-                            </div>
-                            <div class="thresh-comp-row">
-                                <span class="badge-status status-neutral">DES Net Benefit</span>
-                                <strong>&gt; 7% Risk Threshold</strong>
-                            </div>
-                            <div class="thresh-advantage-alert">
-                                <strong>BNs have lower threshold for clinical utility:</strong> BNs flag actionable cancer risk at earlier and lower probability cutoffs.
-                            </div>
-                        </div>
+                    <div class="chart-canvas-wrapper" style="height: 280px;">
+                        <canvas id="correlationCanvas"></canvas>
                     </div>
+                </div>
 
-                    <p class="utility-body-text">
-                        A lower threshold allows primary care providers to safely refer patients presenting with subtle non-specific symptoms for low-dose computed tomography (LDCT) before stage progression occurs.
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/correlation_16.jpeg', 'Figure 10: 16x16 Prediction Correlation Matrix (Colab Export)')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
+                        <img src="images/correlation_16.jpeg" alt="Figure 10: 16x16 Prediction Correlation Matrix" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
+                        <strong>Figure 10: 16×16 Prediction Correlation Matrix (Original Colab Export)</strong>
                     </p>
                 </div>
+            </div>
 
-                <div class="card utility-card">
-                    <div class="card-icon-header">
+        </div>
+    </section>
+
+    <!-- BLOCK 9: Table 3 from Paper -->
+    <section class="section-container" id="table3-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">📄 Paper Benchmark</div>
+                <h2 class="section-title">Table 3 from Paper: Model Performance</h2>
+                <p class="section-description">
+                    Original paper benchmark evaluating performance across discretization strategies (EFD/EWD vs Expert) and missing data levels (0%–30%).
+                </p>
+            </div>
+
+            <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/table3.jpeg', 'Paper Table 3 — Bayesian Network Model Performance')">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                    <span class="paper-badge-tag">📄 Paper Table 3 (Original Benchmark)</span>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                </div>
+                <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; min-height: 350px;">
+                    <img src="images/table3.jpeg" alt="Paper Table 3 — Bayesian Network Model Performance" style="max-width: 100%; height: auto; max-height: 420px; object-fit: contain; border-radius: 4px;" />
+                </div>
+                <p style="margin-top: 10px; font-size: 0.82rem; color: var(--text-secondary);">
+                    <strong>Paper Table 3 Summary:</strong> Evaluates AUC-ROC and TPR @ 95% specificity across discretization modes (EFD/EWD vs Expert) and missingness levels (0% to 30%).
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOCK 10: Extension Datasets & BN vs ML Comparisons -->
+    <section class="section-container bg-light" id="extension-baselines">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">🚀 Research Extensions</div>
+                <h2 class="section-title">Extension Datasets &amp; Machine Learning Comparisons</h2>
+                <p class="section-description">
+                    Extended benchmarks evaluating Bayesian Networks against Random Forest and XGBoost across external datasets (NLST subset, Kaggle, Synthetic). <span class="colab-text-note">Colab Extension (Not in paper)</span>.
+                </p>
+            </div>
+
+            <!-- ROW 1: Figure 11: BN vs ML (bn_vs_ml.jpeg) -->
+            <div class="grid-2 mb-4">
+                <div class="card chart-card">
+                    <div class="chart-card-header">
                         <div>
-                            <h3 class="card-heading">Clinical Utility Summary</h3>
-                            <span class="subheading-tag">Key Takeaways</span>
+                            <h3 class="chart-heading">BN vs. ML (Mean-Imputed)</h3>
+                            <span class="chart-subheading">(a) AUC vs missingness &amp; (b) TPR @ fixed TNR=95%</span>
+                        </div>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <h4 style="font-size: 0.76rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">(a) AUC vs. missingness</h4>
+                        <div class="chart-canvas-wrapper" style="height: 170px;">
+                            <canvas id="bnVsMlChart"></canvas>
                         </div>
                     </div>
 
-                    <ul class="takeaway-list-clean">
-                        <li>
-                            <span class="takeaway-icon">✓</span>
-                            <div><strong>Robust:</strong> Preserves prediction fidelity from 0% to 30% missing data.</div>
-                        </li>
-                        <li>
-                            <span class="takeaway-icon">✓</span>
-                            <div><strong>AUC 0.737–0.757:</strong> Comparable to complex ML (DES 0.770) and 0.886 extended.</div>
-                        </li>
-                        <li>
-                            <span class="takeaway-icon">✓</span>
-                            <div><strong>Clinical Utility &gt;5%:</strong> Lower risk threshold for positive net benefit than ML (&gt;7%).</div>
-                        </li>
-                        <li>
-                            <span class="takeaway-icon">✓</span>
-                            <div><strong>Interpretable:</strong> Transparent conditional probability parameters for clinical trust.</div>
-                        </li>
-                    </ul>
-
-                    <div class="key-takeaways-pillbox">
-                        <span class="pill-title">Clinical Impact:</span>
-                        <span>Spares up to 75% of non-cancer patients from unnecessary CT radiation while flagging suspected malignancies.</span>
+                    <div>
+                        <h4 style="font-size: 0.76rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 4px;">(b) TPR @ fixed TNR=95% vs. missingness</h4>
+                        <div class="chart-canvas-wrapper" style="height: 170px;">
+                            <canvas id="bnVsMlTprChart"></canvas>
+                        </div>
                     </div>
                 </div>
+
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/bn_vs_ml.jpeg', 'Figure 11: Bayesian Network vs. Random Forest / XGBoost (Colab Export)')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 380px;">
+                        <img src="images/bn_vs_ml.jpeg" alt="Figure 11: Bayesian Network vs. Random Forest / XGBoost" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 370px; object-fit: contain;" />
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
+                        <strong>Figure 11: Bayesian Network vs. Random Forest / XGBoost (mean-imputed)</strong>
+                    </p>
+                </div>
             </div>
+
+            <!-- ROW 2: Figure 13: Real-data validation (bn_vs_imputed_ml.jpeg) -->
+            <div class="grid-2 mb-4">
+                <div class="card chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <h3 class="chart-heading">BN vs. Mean-Imputed ML (Real Data Validation)</h3>
+                            <span class="chart-subheading">AUC vs. % missing values (Synthetically injected into real data)</span>
+                        </div>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                    </div>
+                    <div class="chart-canvas-wrapper" style="height: 280px;">
+                        <canvas id="bnVsImputedMlChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/bn_vs_imputed_ml.jpeg', 'Figure 13: Real-data validation — BN vs. mean-imputed ML (Colab Export)')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
+                        <img src="images/bn_vs_imputed_ml.jpeg" alt="Figure 13: Real-data validation — BN vs. mean-imputed ML" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
+                        <strong>Figure 13: Real-data validation — BN vs. mean-imputed ML</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ROW 3: Figure 13: External validation on NLST-780 (bn_vs_ml_nlst.jpeg) -->
+            <div class="grid-2 mb-4">
+                <div class="card chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <h3 class="chart-heading">BN vs. ML on NLST</h3>
+                            <span class="chart-subheading">External validation on NLST-780 cohort</span>
+                        </div>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                    </div>
+                    <div class="chart-canvas-wrapper" style="height: 280px;">
+                        <canvas id="nlstValidationChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/bn_vs_ml_nlst.jpeg', 'Figure 13: External validation on NLST-780 (Colab Export)')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
+                        <img src="images/bn_vs_ml_nlst.jpeg" alt="Figure 13: External validation on NLST-780" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
+                        <strong>Figure 13: External validation on NLST-780</strong>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- BLOCK 11: Architecture Diagram & Description for Hybrid BN + Deep Learning -->
+    <section class="section-container" id="arch-hybrid">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">⚡ Architecture II</div>
+                <h2 class="section-title">Hybrid Bayesian Network (BN + Deep Learning)</h2>
+                <p class="section-description">
+                    The Bayesian Network's posterior probability is engineered as an additional input feature for a downstream neural classifier.
+                </p>
+            </div>
+
+            <!-- Canvas Architecture II Diagram -->
+            <figure class="diagram-figure card mb-4" id="fig2" style="padding: 20px;">
+                <p class="fig-eyebrow">Architecture II</p>
+                <h2 class="fig-title">Hybrid Bayesian Network (Bayesian-Network + Deep Learning)</h2>
+                <p class="fig-sub">The Bayesian network's posterior probability is engineered as an additional input feature for a downstream neural classifier.</p>
+                <div class="canvas-card">
+                    <canvas id="canvas2"></canvas>
+                    <div class="legend" id="legend2"></div>
+                </div>
+                <figcaption style="max-width: 100%; margin-top: 18px;">
+                    <p style="margin-bottom: 8px;"><b>Architecture II Full Description:</b></p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>1. Split &amp; Probabilistic Feature Engineering:</strong> Features are passed simultaneously to a retrained Bayesian Network and a median imputer within each outer fold.
+                    </p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>2. Bayesian Posterior Generation:</strong> The Bayesian Network calculates $P(\text{LC} \mid X)$ via exact variable elimination for both training and held-out rows.
+                    </p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>3. Feature Fusion:</strong> The single posterior probability scalar is concatenated onto the 4-dimensional median-imputed feature vector $[ \text{Age}, \text{Sex}, \text{Race}, \text{Smoker}, P_{\text{BN}} ] \in \mathbb{R}^5$.
+                    </p>
+                    <p>
+                        <strong>4. Deep Multilayer Perceptron Classification:</strong> Passed through a `StandardScaler` into a 4-layer MLP neural network $(128 \to 64 \to 32 \to 16)$ trained with Adam optimizer and early stopping, preventing data leakage across outer cross-validation folds.
+                    </p>
+                </figcaption>
+            </figure>
+
+            <!-- Figure 14: Side-by-Side Pair for Hybrid BN + DL -->
+            <div class="grid-2">
+                <div class="card chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <h3 class="chart-heading">Figure 14: Hybrid BN + Deep Learning Line Chart</h3>
+                            <span class="chart-subheading">AUC vs. % missing values across model architectures</span>
+                        </div>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                    </div>
+                    <div class="chart-canvas-wrapper" style="height: 280px;">
+                        <canvas id="hybridBnDlChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/hybrid_bn_dl.jpeg', 'Figure 14: Hybrid Bayesian Network + Deep Learning (Colab Export)')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
+                        <img src="images/hybrid_bn_dl.jpeg" alt="Figure 14: Hybrid Bayesian Network + Deep Learning" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
+                        <strong>Figure 14: Hybrid Bayesian Network + Deep Learning</strong>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- BLOCK 12: Architecture & Description about Final Model (BN-Hybrid Models on NLST) -->
+    <section class="section-container bg-light" id="arch-stacking">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">⚡ Architecture III &amp; Final Model</div>
+                <h2 class="section-title">Stacking Bayesian-Network Ensemble Models on NLST</h2>
+                <p class="section-description">
+                    Three independent base learners (BN, XGBoost, Deep MLP) are combined by a logistic-regression meta-learner, trained on leak-free out-of-fold predictions.
+                </p>
+            </div>
+
+            <!-- Canvas Architecture III Diagram -->
+            <figure class="diagram-figure card mb-4" id="fig3" style="padding: 20px;">
+                <p class="fig-eyebrow">Architecture III</p>
+                <h2 class="fig-title">Stacking Bayesian-Network Ensemble Architecture</h2>
+                <p class="fig-sub">Three independent base learners are combined by a logistic-regression meta-learner, trained on leak-free out-of-fold predictions.</p>
+                <div class="canvas-card">
+                    <canvas id="canvas3"></canvas>
+                    <div class="legend" id="legend3"></div>
+                </div>
+                <figcaption style="max-width: 100%; margin-top: 18px;">
+                    <p style="margin-bottom: 8px;"><b>Architecture III Full Description:</b></p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>1. Inner 5-Fold Cross-Validation (Out-of-Fold Generation):</strong> Within each outer training fold, an inner 5-fold CV split fits the Bayesian Network, XGBoost, and Deep MLP to generate out-of-fold risk probability estimates $[P_{\text{BN}}, P_{\text{XGB}}, P_{\text{MLP}}]$.
+                    </p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>2. Meta-Learner Fitting:</strong> A Logistic Regression meta-learner ($C=1.0$) is trained on these out-of-fold predictions, guaranteeing zero data leakage across splits.
+                    </p>
+                    <p style="margin-bottom: 8px;">
+                        <strong>3. Outer Test Prediction &amp; Stacking:</strong> All three base models are refit on the complete outer training fold and used to predict test fold meta-features, which are scored by the trained meta-learner.
+                    </p>
+                    <p>
+                        <strong>4. Ensemble Performance:</strong> Combines structured probabilistic reasoning with non-linear gradient boosting and deep representations, achieving the highest missing data resilience on the NLST cohort.
+                    </p>
+                </figcaption>
+            </figure>
+
+            <!-- Figure 14: Side-by-Side Pair for Final Stacking Model -->
+            <div class="grid-2">
+                <div class="card chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <h3 class="chart-heading">Figure 14: BN-Hybrid Models on NLST Line Chart</h3>
+                            <span class="chart-subheading">AUC vs. % Missing Values across 7 hybrid ensemble models</span>
+                        </div>
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                    </div>
+                    <div class="chart-canvas-wrapper" style="height: 280px;">
+                        <canvas id="stackingModelChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/final_stacking_model.jpeg', 'Figure 14: Bayesian Network–Hybrid Models on NLST (Colab Export)')">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span class="colab-text-note">Colab Extension (Not in paper)</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted);">🔍 Click to expand</span>
+                    </div>
+                    <div style="background: #ffffff; padding: 6px; border-radius: 8px; display: flex; justify-content: center; align-items: center; min-height: 280px;">
+                        <img src="images/final_stacking_model.jpeg" alt="Figure 14: Bayesian Network–Hybrid Models on NLST" class="colab-img-border" style="max-width: 100%; height: auto; max-height: 270px; object-fit: contain;" />
+                    </div>
+                    <p style="margin-top: 6px; font-size: 0.76rem; color: var(--text-secondary);">
+                        <strong>Figure 14: Bayesian Network–Hybrid Models on NLST</strong>
+                    </p>
+                </div>
+            </div>
+
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer-section" id="footer">
         <div class="container footer-container">
+            
+            <!-- Thank You & Intelligent Quote Block -->
+            <div class="card mb-4" style="background: #ffffff; border: 1.5px solid var(--border); padding: 32px 24px; text-align: center; border-radius: var(--radius-lg);">
+                <div style="font-size: 2.2rem; font-weight: 900; color: var(--text-primary); letter-spacing: -0.02em; margin-bottom: 12px;">
+                    Thank You! 🙏
+                </div>
+                
+                <div style="background: var(--bg-subtle); border-left: 3.5px solid var(--accent); padding: 18px 22px; border-radius: var(--radius-md); text-align: left; max-width: 720px; margin: 0 auto;">
+                    <p style="font-family: Georgia, serif; font-style: italic; font-size: 1.05rem; color: var(--text-primary); line-height: 1.55; margin-bottom: 8px;">
+                        “Probability is not about numbers; it is about the degree of belief in the presence of uncertainty. A Bayesian Network does not merely predict the future — it reasons through the unobserved, illuminating the true causal architecture of medicine.”
+                    </p>
+                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px;">
+                        — Inspired by Judea Pearl · Turing Award Winner &amp; Pioneer of Bayesian Networks
+                    </span>
+                </div>
+            </div>
+
             <div class="footer-main-quote">
                 <div class="quote-icon">“</div>
                 <h3 class="quote-text">
@@ -1190,15 +1178,29 @@
                     <span class="footer-pill">9,940 Patients Analyzed</span>
                     <span class="footer-pill">23 Biomarkers Tested</span>
                     <span class="footer-pill">16 Configurations Tested</span>
-                    <span class="footer-pill">Best AUC: 0.886 (+17.2%)</span>
+                    
                 </div>
             </div>
 
-            <div class="footer-bottom-bar">
-                <p>© 2025 Research Presentation · Designed for split-screen presentation alongside Paper</p>
-            </div>
+            
         </div>
     </footer>
+
+    <!-- Full Paper PDF Lightbox Modal -->
+    <div id="paperPdfModal" class="lightbox-modal" style="display: none;" onclick="closePaperPdfModal()">
+        <div class="lightbox-content" style="max-width: 1100px; width: 92vw; height: 90vh;" onclick="event.stopPropagation()">
+            <div class="lightbox-header">
+                <span class="lightbox-title">📄 Full Research Paper — Henriksen et al. (2025)</span>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="batch2_final_paper.pdf" target="_blank" class="btn btn-secondary btn-sm" style="color: var(--text-primary);">↗ Open in New Tab</a>
+                    <button class="lightbox-close" onclick="closePaperPdfModal()">✕</button>
+                </div>
+            </div>
+            <div class="lightbox-body" style="padding: 0; height: calc(90vh - 60px);">
+                <iframe src="batch2_final_paper.pdf" width="100%" height="100%" style="border: none;"></iframe>
+            </div>
+        </div>
+    </div>
 
     <!-- Global Image Modal -->
     <div id="globalImageModal" class="lightbox-modal" style="display: none;" onclick="closeImageModal()">
@@ -1212,6 +1214,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Tooltip Element for Canvas Architecture Diagrams -->
+    <div id="tooltip"></div>
 
     <script>
     function openImageModal(src, title) {
