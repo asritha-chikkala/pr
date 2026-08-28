@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initRiskControls();
     initTraceLog();
     initGlobalShortcuts();
+    initFocusHints();
     initDagComparison();
     initAllConfigsChart();
     initDegradationChart();
@@ -460,6 +461,17 @@ function stepPresenter() {
     logInference(`Presenter step ${presenterStep}/${PRESENTER_SEQUENCE.length} executed.`);
 }
 
+function initFocusHints() {
+    document.querySelectorAll('.demo-card, #missing-sim, .dag-card').forEach(card => {
+        if (card.querySelector('.focus-hint')) return;
+        const hint = document.createElement('span');
+        hint.className = 'focus-hint';
+        hint.textContent = '⛶ Shift+F';
+        hint.title = 'Press Shift+F to focus this section full-screen';
+        card.appendChild(hint);
+    });
+}
+
 function initGlobalShortcuts() {
     const SECTIONS = {
         '1': 'hero', '2': 'paper-pdf', '3': 'problem-lab', '4': 'overview-solution',
@@ -477,7 +489,7 @@ function initGlobalShortcuts() {
             e.preventDefault();
             return;
         }
-        if (k === 'f') { toggleFocusMode(); e.preventDefault(); return; }
+        if (e.shiftKey && k === 'f') { toggleFocusMode(); e.preventDefault(); return; }
         if (e.key === ' ') { e.preventDefault(); stepPresenter(); return; }
     });
 }

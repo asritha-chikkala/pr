@@ -516,6 +516,33 @@ body {
     padding: 22px;
 }
 
+.demo-card,
+#missing-sim,
+.dag-card {
+    position: relative;
+}
+
+.focus-hint {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+    background: var(--bg-light);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 2px 7px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.presenter-focus .focus-hint {
+    display: none;
+}
+
 .patient-header {
     display: flex;
     align-items: center;
