@@ -105,20 +105,6 @@ is needed for the charts to render.
 
 ---
 
-## Project Team
-
-We are a five-member research team. Contact links are placeholders for now.
-
-| Name | Role | Links |
-| ---- | ---- | ----- |
-| **Asritha** | Project Lead & Methodology | [LinkedIn](#) · [ORCID](#) |
-| **Aditya** | Implementation & Web Demo | [GitHub](#) · [LinkedIn](#) |
-| **Manognya** | Data & Synthetic Generation | [ORCID](#) · [Email](#) |
-| **Venkat Sai** | Model & Evaluation | [LinkedIn](#) · [GitHub](#) |
-| **Tanvinder Reddy** | Visualization & Documentation | [GitHub](#) · [Website](#) |
-
----
-
 ## Proposed Features / Roadmap
 
 Ideas for extending the demo website (see `CONTRIBUTING.md` to pick one up):
