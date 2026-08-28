@@ -817,10 +817,10 @@ function createNodeElement(node, nodeKey) {
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
     if (node.type === 'lc') {
-        circle.setAttribute('r', 16);
+        circle.setAttribute('r', 20);
         circle.setAttribute('class', 'svg-node-circle node-lc');
     } else {
-        circle.setAttribute('r', 13);
+        circle.setAttribute('r', 18);
         circle.setAttribute('class', 'svg-node-circle node-connected');
     }
 
