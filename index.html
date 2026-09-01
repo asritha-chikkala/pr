@@ -460,6 +460,63 @@
         </div>
     </section>
 
+    <!-- BLOCK 3.5: Bayesian Network Variable Dependencies (Expert DAG groups) -->
+    <section class="section-container bg-light" id="bn-variable-dependencies">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">Expert DAG Structure</div>
+                <h2 class="section-title">Bayesian Network</h2>
+                 <p style="margin-top: 8px; font-size: 0.78rem; color: var(--text-secondary);">
+                        Visualizing the Interconnected Probabilistic Paths to Lung Cancer Prediction
+                    </p>
+            </div>
+
+            <div class="card bn-hierarchy-card">
+                <div class="bn-hierarchy-diagram" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/bn.jpeg', 'Expert DAG — Bayesian Network variable dependencies')">
+                    <div style="background: #ffffff; padding: 10px; border-radius: 8px; display: inline-block; max-width: 100%;">
+                        <img src="images/bn.jpeg" alt="Expert DAG of Bayesian Network variable dependencies" class="colab-img-border" style="max-width: 100%; height: auto; display: block;" />
+                    </div>
+                   
+                </div>
+
+                <div class="bn-var-theory">
+                    <h3 class="bn-var-theory-title">Bayesian Network (BN) Variable Dependencies</h3>
+
+                    <div class="bn-var-groups">
+                        <div class="bn-var-group">
+                            <h4>Patient characteristics</h4>
+                            <ul>
+                                <li>Age, sex, smoking</li>
+                            </ul>
+                        </div>
+                        <div class="bn-var-group">
+                            <h4>Blood-cell variables</h4>
+                            <ul>
+                                <li>Leukocytes, neutrophils, lymphocytes, monocytes, eosinophils, basophils, platelets, hemoglobin</li>
+                            </ul>
+                        </div>
+                        <div class="bn-var-group">
+                            <h4>Laboratory variables</h4>
+                            <ul>
+                                <li>CRP, ALAT, albumin, amylase, alkaline, phosphatase, bilirubin, calcium, creatinine, INR, LDH, potassium, sodium</li>
+                            </ul>
+                        </div>
+                        <div class="bn-var-group">
+                            <h4>Outcome</h4>
+                            <ul>
+                                <li>LC (lung cancer)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <p class="bn-var-theory-body">
+                        This diagram illustrates the complete structure of the Bayesian Network, where every individual node represents a specific patient variable or lab result. The arrows represent the probabilistic dependencies—how a change in one variable influences the likelihood of another.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- BLOCK 4: Problem Statement (description) (brief) & solution (from paper) (about BN) -->
     <section class="section-container bg-light" id="overview-solution">
         <div class="container">
@@ -985,31 +1042,7 @@
         </div>
     </section>
 
-    <!-- BLOCK 9: Table 3 from Paper -->
-    <section class="section-container" id="table3-section">
-        <div class="container">
-            <div class="section-header text-center">
-                <div class="section-badge">Paper Benchmark</div>
-                <h2 class="section-title">Table 3 from Paper: Model Performance</h2>
-                <p class="section-description">
-                    Original paper benchmark evaluating performance across discretization strategies (EFD/EWD vs Expert) and missing data levels (0%–30%).
-                </p>
-            </div>
-
-            <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/table3.jpeg', 'Paper Table 3 — Bayesian Network Model Performance')">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
-                    <span class="paper-badge-tag">Paper Table 3 (Original Benchmark)</span>
-                    <span style="font-size: 0.72rem; color: var(--text-muted);">Click to expand</span>
-                </div>
-                <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; min-height: 350px;">
-                    <img src="images/table3.jpeg" alt="Paper Table 3 — Bayesian Network Model Performance" style="max-width: 100%; height: auto; max-height: 420px; object-fit: contain; border-radius: 4px;" />
-                </div>
-                <p style="margin-top: 10px; font-size: 0.82rem; color: var(--text-secondary);">
-                    <strong>Paper Table 3 Summary:</strong> Evaluates AUC-ROC and TPR @ 95% specificity across discretization modes (EFD/EWD vs Expert) and missingness levels (0% to 30%).
-                </p>
-            </div>
-        </div>
-    </section>
+    
 
     <!-- BLOCK 10: Extension Datasets & BN vs ML Comparisons -->
     <section class="section-container bg-light" id="extension-baselines">
@@ -1120,6 +1153,32 @@
                 </div>
             </div>
 
+        </div>
+    </section>
+
+    <!-- BLOCK 9: Table 3 from Paper -->
+    <section class="section-container" id="table3-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <div class="section-badge">Paper Benchmark</div>
+                <h2 class="section-title">Table 3 from Paper: Model Performance</h2>
+                <p class="section-description">
+                    Original paper benchmark evaluating performance across discretization strategies (EFD/EWD vs Expert) and missing data levels (0%–30%).
+                </p>
+            </div>
+
+            <div class="card" style="text-align: center; cursor: pointer;" onclick="openImageModal('images/table3.jpeg', 'Paper Table 3 — Bayesian Network Model Performance')">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                    <span class="paper-badge-tag">Paper Table 3 (Original Benchmark)</span>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">Click to expand</span>
+                </div>
+                <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid var(--border); display: flex; justify-content: center; align-items: center; min-height: 350px;">
+                    <img src="images/table3.jpeg" alt="Paper Table 3 — Bayesian Network Model Performance" style="max-width: 100%; height: auto; max-height: 420px; object-fit: contain; border-radius: 4px;" />
+                </div>
+                <p style="margin-top: 10px; font-size: 0.82rem; color: var(--text-secondary);">
+                    <strong>Paper Table 3 Summary:</strong> Evaluates AUC-ROC and TPR @ 95% specificity across discretization modes (EFD/EWD vs Expert) and missingness levels (0% to 30%).
+                </p>
+            </div>
         </div>
     </section>
 
